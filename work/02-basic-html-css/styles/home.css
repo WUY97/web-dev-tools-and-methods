@@ -1,0 +1,9 @@
+ul {
+    list-style-type: "\1f431";
+    border: 2px dotted #85586f;
+    padding: 3rem;
+}
+
+li {
+    padding: 0.5rem;
+}

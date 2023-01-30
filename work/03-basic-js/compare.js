@@ -19,7 +19,7 @@ function compare(word, guess) {  // DO NOT MODIFY
         guessCount[guess.charCodeAt(i) - 'a'.charCodeAt(0)] ? '' : guessCount[guess.charCodeAt(i) - 'a'.charCodeAt(0)] = true;
     }
 
-    // Match++ if a character exists in both words
+    // common++ if a character exists in both words
     let common = 0;
     for (let i = 0; i < 26; i++) {
         wordCount[i] && guessCount[i] ? common++ : '';

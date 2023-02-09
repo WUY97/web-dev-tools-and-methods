@@ -1,0 +1,46 @@
+* {
+    margin: 0;
+}
+
+header {
+    background-color: #dfd3c3;
+    color: #85586f;
+    display: flex;
+    column-gap: 1rem;
+    align-items: center;
+}
+
+header img {
+    width: 75px;
+    height: 75px;
+}
+
+main {
+    background-color: #f8ede3;
+    padding: 2rem;
+}
+
+@media screen and (min-width: 44rem) {
+    main {
+        padding: 5rem 15% 5rem 15%;
+    }
+}
+
+footer {
+    background-color: #dfd3c3;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-around;
+}
+
+h1 {
+    padding: 1rem 0 1rem 0;
+}
+
+h2 {
+    font-size: 200%;
+}
+
+h3 {
+    font-size: 170%;
+}

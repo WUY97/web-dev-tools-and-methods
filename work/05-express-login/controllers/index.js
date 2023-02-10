@@ -9,57 +9,74 @@ exports.get = (req, res) => {
         <!doctype html>
         <html>
             <head>
-            <title>Chat</title>
+            <title>Guess the Word</title>
+            <link rel="stylesheet" href="/styles.css">
             </head>
             <body>
                 <main>
-                    <div id='login-form'>${getLoginForm(sId, loginError)}</div>
-                    <div id='login-status'>${getLoginStatus(sId)}</div>
-                    <div id='stored-word'>${getStoredWord(sId)}</div>
-                    <div id='word-form'>${updateWordForm(sId, wordError)}</div>
+                    ${getTitle(sId)}
+                    ${getStoredWord(sId)}
+                    ${updateWordForm(sId, wordError)}
+                    ${getLoginForm(sId, loginError)}
                 </main>
             </body>
         </html>
     `);
 };
 
+const getTitle = (sId) => {
+    if (!sId || !sessions[sId]) {
+        return `<h1>Enter your username to start:</h1>`;
+    } else {
+        return `<h1>Hi ${sessions[sId]},</h1>`
+    }
+}
+
 const getLoginForm = (sId, loginError) => {
     // Check if the session id exists in the sessions object
     if (!sId || !sessions[sId]) {
         // Render the login page
         return `
-            <form action="/login" method="post">
-                <input type="text" name="username" placeholder="Username">
-                <button type="submit">Login</button>
-            </form>
-            ${loginError ? `<p style="color:red">${loginError}</p>` : ""}
+            <div id='login-form'>
+                <form action="/login" method="post">
+                    <input type="text" name="username" placeholder="Username">
+                    <button type="submit">Login</button>
+                </form>
+                ${loginError ? `<p class='error'>${loginError}</p>` : ''}
+            </div>
         `;
     } else {
         // Render the logout button
         return `
-            <form action="/logout" method="post">
-                <button type="submit">Logout</button>
-            </form>
+            <div id='logout'>
+                <form action="/logout" method="post">
+                    <button type="submit">Logout</button>
+                </form>
+            </div>
         `;
     }
 };
 
-const getLoginStatus = (sId) => {
-    // Check if the session id exists in the sessions object
-    if (!sId || !sessions[sId]) {
-        // Render the login page
-        return `
-            <p>Please log in.</p>
-        `;
-    } else {
-        const username = sessions[sId];
-        // Render the login status
-        return `
-            <p>You are logging in as: ${username}.</p>
-            <p>Request had cookie 'sId' : ${sId}.</p>
-        `;
-    }
-};
+// const getLoginStatus = (sId) => {
+//     // Check if the session id exists in the sessions object
+//     if (!sId || !sessions[sId]) {
+//         // Render the login page
+//         return `
+//         <div id='stored-word'>
+//             <p>Please log in.</p>
+//         </div>
+//         `;
+//     } else {
+//         const username = sessions[sId];
+//         // Render the login status
+//         return `
+//             <div id='stored-word'>
+//                 <p>You are logging in as: ${username}.</p>
+//                 <p>Request had cookie 'sId' : ${sId}.</p>
+//             </div>
+//         `;
+//     }
+// };
 
 const getStoredWord = (sId) => {
     // Check if the session id exists in the sessions object
@@ -70,11 +87,11 @@ const getStoredWord = (sId) => {
         const word = words[username];
         // Render the logout button
         return `
-                <p>${
+                <h2 class="store-word">${
                     !word
                         ? "Let's guess a word!"
-                        : 'Your current stored word is: ' + word + '.'
-                }</p>
+                        : 'Your last attempt was: ' + word.toUpperCase() + '.'
+                }</h2>
             `;
     }
 };
@@ -84,11 +101,13 @@ const updateWordForm = (sId, wordError) => {
         return ``;
     } else {
         return `
-        <form action="/store" method="post">
-            <input type="text" name="word" placeholder="Guess a word here">
-            <button type="submit">Submit</button>
-        </form>
-        ${wordError ? `<p style="color:red">${wordError}</p>` : ""}
-    `;
+            <div class='word-form'>
+                <form action="/store" method="post">
+                    <input type="text" name="word" placeholder="Guess a word here">
+                    <button type="submit">Submit</button>
+                </form>
+                ${wordError ? `<p class='error'>${wordError}</p>` : ''}
+            </div>
+        `;
     }
 };

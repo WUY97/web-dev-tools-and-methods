@@ -1,28 +1,103 @@
-// game = {
-//     id: str;
-//     username: str;
-//     effective: boolean -> default to be true, when start a new game current one turns false
-//     secret: str -> determined when starting a new game
-//     candidates: [str1, str2, str3] -> in the beginning all the words are filled in
-//     previous: [str1, str2, str3] -> from left to right least to most recent
-// }
+const words = require('../../words');
+const helper = require('../helpers/game');
+class Game {
+    constructor(username) {
+        this.username = username;
+        this.currentGame = {};
+        this.previousGames = [];
+    }
 
-// games = [
-//     username: {
-//         currentGame: game,
-//         previousGame: [game1, game2, game3, ...],
-//     }
-// ]
+    startNewGame() {
+        const possible = [];
+        for (let word of words) {
+            possible.push(word.toUpperCase());
+        }
 
-// game = [
-//     secret: str,
-//     candidates: [str1, str2, str3, ...]
-//     previous: [str1, str2, str3, ...] all incorrent valid guess goes here
-// ]
+        const wordLen = possible[0].length;
+        const newGame = {
+            secret: helper.getRandomWord(words).toUpperCase(),
+            possible: possible,
+            incorrect: [],
+            attempt: 0,
+            success: false,
+            wordLen: wordLen,
+        };
 
-// games[username].currentGAME = {}
-// games[username].previousGame = [{}, {}, {}]
+        if (Object.keys(this.currentGame).length !== 0) {
+            this.previousGames.push(this.currentGame);
+        }
+
+        this.currentGame = newGame;
+        return;
+    }
+
+    continueGame() {
+        if (Object.keys(this.currentGame).length === 0) {
+            this.startNewGame();
+            return;
+        }
+        return;
+    }
+
+    guessWord(word) {
+        word = word.toUpperCase();
+        if (word === this.currentGame.secret) {
+            this.currentGame.success = true;
+            this.currentGame.attempt++;
+            return;
+        }
+
+        let common = helper.compare(word, this.getSecret());
+        this.currentGame.possible = this.currentGame.possible.filter(
+            (val) => val !== word
+        );
+        this.currentGame.incorrect.push({ word: word, common: common });
+        this.currentGame.attempt++;
+        return;
+    }
+
+    getUsername() {
+        return this.username;
+    }
+
+    getCurrentGame() {
+        return this.currentGame;
+    }
+
+    getAttempt() {
+        return this.currentGame.attempt;
+    }
+
+    getSuccess() {
+        return this.currentGame.success;
+    }
+
+    getSecret() {
+        return this.currentGame.secret;
+    }
+
+    getPossible() {
+        return this.currentGame.possible;
+    }
+
+    getIncorrect() {
+        return this.currentGame.incorrect;
+    }
+
+    getWordLen() {
+        return this.currentGame.wordLen;
+    }
+}
 
 const games = {};
 
-module.exports = games;
+module.exports = {
+    getGame: (username) => {
+        if (!games[username]) {
+            games[username] = new Game(username);
+        }
+
+        games[username].continueGame();
+        return games[username];
+    },
+};

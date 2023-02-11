@@ -1,9 +1,5 @@
-const { v4: uuidv4 } = require('uuid');
-
 const sessions = require('../models/sessions');
-const helpers = require('../helpers/helpers');
-const game = require('../helpers/game');
-
+const Games = require('../models/games');
 const { INVALID_USERNAME } = require('../helpers/messages');
 
 // Guess endpoint
@@ -22,8 +18,14 @@ exports.post = (req, res) => {
     }
 
     const username = sessions[sId];
-    const guess = req.body.guess;
-    game.guessWord(username, guess);
+    const guess = req.body.guess.toUpperCase();
+    const game = Games.getGame(username);
+    const possible = game.getPossible();
+    // Only valid guesses will be processed.
+    if (possible.includes(guess)) {
+        game.guessWord(guess);
+        return res.redirect('/');
+    }
 
-    return res.redirect('/');
+    return res.redirect('/?loginError=' + INVALID_USERNAME);
 };

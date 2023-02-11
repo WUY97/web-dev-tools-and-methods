@@ -1,5 +1,5 @@
 const sessions = require('../models/sessions');
-const game = require('../helpers/game');
+const Games = require('../models/games');
 
 // const { INVALID_USERNAME } = require('../helpers/messages');
 
@@ -19,7 +19,8 @@ exports.post = (req, res) => {
     }
 
     const username = sessions[sId];
-    game.startNewGame(username);
+    const game = Games.getGame(username);
+    game.startNewGame();
 
     return res.redirect('/');
 };

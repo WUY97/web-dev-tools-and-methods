@@ -7,16 +7,25 @@ exports.get = (req, res) => {
         <!doctype html>
         <html>
             <head>
-            <title>Guess the Word</title>
+                <title>Guess My Word</title>
+                <link rel="stylesheet" href="/styles.css">
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
             </head>
             <body>
-                <main>
+                <header>
                     ${getTitle(sId)}
-                    ${getLoginStatus(sId)}
-                    ${getGames(sId)}
+
+                        ${getLoginForm(sId)}
+                        ${startNewGameButton(sId)}
+                        ${getLogoutButton(sId)}
+
+                </header>
+                <main>
                     ${guessWordForm(sId)}
-                    ${startNewGameForm(sId)}
-                    ${getLoginForm(sId)}
+                    ${getGames(sId)}
+                    ${getResultForm(sId)}
                 </main>
             </body>
         </html>
@@ -44,33 +53,35 @@ const getLoginForm = (sId) => {
             </div>
         `;
     } else {
-        // Render the logout button
+        return ``;
+    }
+};
+
+const startNewGameButton = (sId) => {
+    if (!sId || !sessions[sId]) {
+        return ``;
+    } else {
         return `
-            <div id='logout'>
-                <form action="/logout" method="post">
-                    <button type="submit">Logout</button>
+            <div class='word-form'>
+                <form action="/new-game" method="post">
+                    <button type="submit">Start New Game</button>
                 </form>
             </div>
         `;
     }
 };
 
-const getLoginStatus = (sId) => {
+const getLogoutButton = (sId) => {
     // Check if the session id exists in the sessions object
     if (!sId || !sessions[sId]) {
-        // Render the login page
-        return `
-        <div id='stored-word'>
-            <p>Please log in.</p>
-        </div>
-        `;
+        return ``;
     } else {
-        const username = sessions[sId];
-        // Render the login status
+        // Render the logout button
         return `
-            <div id='stored-word'>
-                <p>You are logging in as: ${username}.</p>
-                <p>Request had cookie 'sId' : ${sId}.</p>
+            <div id='logout'>
+                <form action="/logout" method="post">
+                    <button type="submit">Logout</button>
+                </form>
             </div>
         `;
     }
@@ -87,30 +98,45 @@ const getGames = (sId) => {
         const possible = game.getPossible();
         const incorrect = game.getIncorrect();
         const attempt = game.getAttempt();
+        const success = game.getSuccess();
+        if (success) {
+            return ``;
+        }
         return (
-            `<p>Possible words: ` +
-            possible.map((word) => `<span>${word}, </span>`).join('') +
-            `</p>` +
-            `<p>Incorrect words: ` +
+            `
+            <h2>Attempts: ${attempt}</h2>
+            <div class="words-panel">
+                <h2>Possible words</h2>
+                <div class="words"> ` +
+            possible.map((word) => `<div class="word">${word}</div>`).join('') +
+            `</div>
+            </div>
+            <div class="words-panel">` +
+            (Object.keys(incorrect).length !== 0
+                ? `<h2>Incorrect words (: in common)</h2>`
+                : ``) +
+            `<div class="words"> ` +
             Object.values(incorrect)
-                .map((word) => `<span>${word.word}: ${word.common}, </span>`)
+                .map(
+                    (word) =>
+                        `<div class="word">${word.word}: ${word.common}</div>`
+                )
                 .join('') +
-            `</p>` +
-            `<p>Attempts: ${attempt}</p>`
+            `</div>
+            </div>`
         );
     }
 };
 
-const guessWordForm = (sId, wordError) => {
+const guessWordForm = (sId) => {
     if (!sId || !sessions[sId]) {
         return ``;
     } else {
         const username = sessions[sId];
         const game = Games.getGame(username);
         const length = game.getWordLen();
-        const attempt = game.getAttempt();
         if (game.getSuccess()) {
-            return `<p>Congrats!</p><p>You won in ${attempt} attempts.</p>`;
+            return ``;
         }
 
         return `
@@ -119,22 +145,30 @@ const guessWordForm = (sId, wordError) => {
                     <input type="text" name="guess" minlength='${length}' maxlength='${length}' pattern="[a-zA-Z]+" placeholder="Your guess" title='Your guess can only includes letters and be size of ${length}.'>
                     <button type="submit">Submit</button>
                 </form>
-                ${wordError ? `<p class='error'>${guessError}</p>` : ''}
             </div>
         `;
     }
 };
 
-const startNewGameForm = (sId) => {
+const getResultForm = (sId) => {
     if (!sId || !sessions[sId]) {
         return ``;
     } else {
-        return `
-            <div class='word-form'>
-                <form action="/new-game" method="post">
-                    <button type="submit">Start New Game</button>
-                </form>
-            </div>
-        `;
+        const username = sessions[sId];
+        const game = Games.getGame(username);
+        const attempt = game.getAttempt();
+        const secret = game.getSecret();
+        if (game.getSuccess()) {
+            return `
+                <div class="congrats-message">
+                    <h1>🎊 Congrats! 🎊</h1>
+                    <h2>You won in <b>${attempt}</b> attempts.</h2>
+                    <h2>My word is <b>${secret}</b>.</h2>
+                </div>`;
+        }
+
+        return ``;
     }
 };
+
+

@@ -1,8 +1,6 @@
 const sessions = require('../models/sessions');
 const Games = require('../models/games');
 
-// const { INVALID_USERNAME } = require('../helpers/messages');
-
 // New game endpoint
 exports.post = (req, res) => {
     const sId = req.cookies.sId;

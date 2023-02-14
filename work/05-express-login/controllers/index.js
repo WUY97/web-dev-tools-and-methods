@@ -28,9 +28,9 @@ const getTitle = (sId) => {
     if (!sId || !sessions[sId]) {
         return `<h1>Enter your username to start:</h1>`;
     } else {
-        return `<h1>Hi ${sessions[sId]},</h1>`
+        return `<h1>Hi ${sessions[sId]},</h1>`;
     }
-}
+};
 
 const getLoginForm = (sId, loginError) => {
     // Check if the session id exists in the sessions object
@@ -39,7 +39,7 @@ const getLoginForm = (sId, loginError) => {
         return `
             <div id='login-form'>
                 <form action="/login" method="post">
-                    <input type="text" name="username" placeholder="Username">
+                    <input type="text" name="username" placeholder="Username" pattern="^(?!dog$)[a-zA-Z0-9]+" placeholder="Username" title="Username can only contain letters and numbers and can not be dog" required>
                     <button type="submit">Login</button>
                 </form>
                 ${loginError ? `<p class='error'>${loginError}</p>` : ''}
@@ -56,27 +56,6 @@ const getLoginForm = (sId, loginError) => {
         `;
     }
 };
-
-// const getLoginStatus = (sId) => {
-//     // Check if the session id exists in the sessions object
-//     if (!sId || !sessions[sId]) {
-//         // Render the login page
-//         return `
-//         <div id='stored-word'>
-//             <p>Please log in.</p>
-//         </div>
-//         `;
-//     } else {
-//         const username = sessions[sId];
-//         // Render the login status
-//         return `
-//             <div id='stored-word'>
-//                 <p>You are logging in as: ${username}.</p>
-//                 <p>Request had cookie 'sId' : ${sId}.</p>
-//             </div>
-//         `;
-//     }
-// };
 
 const getStoredWord = (sId) => {
     // Check if the session id exists in the sessions object
@@ -103,7 +82,7 @@ const updateWordForm = (sId, wordError) => {
         return `
             <div class='word-form'>
                 <form action="/store" method="post">
-                    <input type="text" name="word" placeholder="Guess a word here">
+                    <input type="text" name="word" placeholder="Guess a word here" pattern="[a-zA-Z]+" title='Your guess can only includes letters.'>
                     <button type="submit">Submit</button>
                 </form>
                 ${wordError ? `<p class='error'>${wordError}</p>` : ''}

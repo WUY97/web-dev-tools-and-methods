@@ -5,6 +5,7 @@ class Game {
         this.username = username;
         this.currentGame = {};
         this.previousGames = [];
+        this.bestScore = Infinity;
     }
 
     startNewGame() {
@@ -24,6 +25,9 @@ class Game {
         };
 
         if (Object.keys(this.currentGame).length !== 0) {
+            if (this.currentGame.success) {
+                this.bestScore = Math.min(this.bestScore, this.currentGame.attempt);
+            }
             this.previousGames.push(this.currentGame);
         }
 
@@ -86,6 +90,14 @@ class Game {
 
     getWordLen() {
         return this.currentGame.wordLen;
+    }
+
+    getBestScore() {
+        if (this.bestScore !== Infinity) {
+            return this.bestScore;
+        }
+        
+        return null;
     }
 }
 

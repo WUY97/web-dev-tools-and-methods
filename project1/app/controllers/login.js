@@ -1,10 +1,18 @@
 const { v4: uuidv4 } = require('uuid');
 
 const sessions = require('../models/sessions');
+const helpers = require('../helpers/helpers');
 
 // Login endpoint
 exports.post = (req, res) => {
     const { username } = req.body;
+
+    if (!username || !helpers.isValidUsername(username)) {
+        return res.redirect(
+            '/?loginError=' +
+                'Invalid username. Username should not be "dog" and should be made up of letters or numbers only.'
+        );
+    }
 
     // Generate a new session id
     const sId = uuidv4();

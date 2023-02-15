@@ -3,6 +3,8 @@ const Games = require('../models/games');
 
 exports.get = (req, res) => {
     const sId = req.cookies.sId;
+    const loginError = req.query.loginError;
+    const guessError = req.query.guessError;
     return res.send(`
         <!doctype html>
         <html>
@@ -16,14 +18,12 @@ exports.get = (req, res) => {
             <body>
                 <header>
                     ${getTitle(sId)}
-
-                        ${getLoginForm(sId)}
-                        ${startNewGameButton(sId)}
-                        ${getLogoutButton(sId)}
-
+                    ${getLoginForm(sId, loginError)}
+                    ${startNewGameButton(sId)}
+                    ${getLogoutButton(sId)}
                 </header>
                 <main>
-                    ${guessWordForm(sId)}
+                    ${guessWordForm(sId, guessError)}
                     ${getGames(sId)}
                     ${getResultForm(sId)}
                 </main>
@@ -32,24 +32,26 @@ exports.get = (req, res) => {
     `);
 };
 
+// Header
 const getTitle = (sId) => {
     if (!sId || !sessions[sId]) {
         return `<h1>Enter your username to start:</h1>`;
     } else {
-        return `<h1>Hi ${sessions[sId]},</h1>`;
+        return `<h1>Hi ${sessions[sId]}, </h1>`;
     }
 };
 
-const getLoginForm = (sId) => {
+const getLoginForm = (sId, loginError) => {
     // Check if the session id exists in the sessions object
     if (!sId || !sessions[sId]) {
         // Render the login page
         return `
             <div id='login-form'>
                 <form action="/login" method="post">
-                    <input type="text" name="username" pattern="^(?!dog$)[a-zA-Z0-9]+" placeholder="Username" title="Username can only contain letters and numbers and can not be dog" required>
+                    <input type="text" name="username" placeholder="Username">
                     <button type="submit">Login</button>
                 </form>
+                ${loginError ? `<p class='error'>${loginError}</p>` : ''}
             </div>
         `;
     } else {
@@ -87,6 +89,7 @@ const getLogoutButton = (sId) => {
     }
 };
 
+// main
 const getGames = (sId) => {
     // Check if the session id exists in the sessions object
     if (!sId || !sessions[sId]) {
@@ -99,23 +102,28 @@ const getGames = (sId) => {
         const incorrect = game.getIncorrect();
         const attempt = game.getAttempt();
         const success = game.getSuccess();
+        const bestScore = game.getBestScore();
         if (success) {
             return ``;
         }
-        return (
+        return (bestScore
+            ? `<h2>Personal Best: ${bestScore}</h2>`
+            : ``) +
             `
-            <h2>Attempts: ${attempt}</h2>
+            <h2>Current Attempts: ${attempt}</h2>
             <div class="words-panel">
-                <h2>Possible words</h2>
-                <div class="words"> ` +
-            possible.map((word) => `<div class="word">${word}</div>`).join('') +
-            `</div>
+            <h2>Possible words</h2>
+            <div class="possible-words"> ` +
+                possible
+                    .map((word) => `<div class="word">${word}</div>`)
+                    .join('') +
+                `</div>
             </div>
-            <div class="words-panel">` +
+        <div class="words-panel">` +
             (Object.keys(incorrect).length !== 0
                 ? `<h2>Incorrect words (: in common)</h2>`
                 : ``) +
-            `<div class="words"> ` +
+            `<div class="incorrect-words"> ` +
             Object.values(incorrect)
                 .map(
                     (word) =>
@@ -123,28 +131,26 @@ const getGames = (sId) => {
                 )
                 .join('') +
             `</div>
-            </div>`
-        );
+        </div>`;
     }
 };
 
-const guessWordForm = (sId) => {
+const guessWordForm = (sId, guessError) => {
     if (!sId || !sessions[sId]) {
         return ``;
     } else {
         const username = sessions[sId];
         const game = Games.getGame(username);
-        const length = game.getWordLen();
         if (game.getSuccess()) {
             return ``;
         }
-
         return `
             <div class='word-form'>
                 <form action="/guess" method="post">
-                    <input type="text" name="guess" minlength='${length}' maxlength='${length}' pattern="[a-zA-Z]+" placeholder="Your guess" title='Your guess can only includes letters and be size of ${length}.'>
+                    <input type="text" name="guess" placeholder="Your guess">
                     <button type="submit">Submit</button>
                 </form>
+                ${guessError ? `<p class='error'>${guessError}</p>` : ''}
             </div>
         `;
     }
@@ -166,9 +172,6 @@ const getResultForm = (sId) => {
                     <h2>My word is <b>${secret}</b>.</h2>
                 </div>`;
         }
-
         return ``;
     }
 };
-
-

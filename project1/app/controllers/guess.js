@@ -1,6 +1,6 @@
 const sessions = require('../models/sessions');
 const Games = require('../models/games');
-const { INVALID_USERNAME } = require('../helpers/messages');
+const helpers = require('../helpers/helpers');
 
 // Guess endpoint
 exports.post = (req, res) => {
@@ -21,11 +21,20 @@ exports.post = (req, res) => {
     const guess = req.body.guess.toUpperCase();
     const game = Games.getGame(username);
     const possible = game.getPossible();
-    // Only valid guesses will be processed.
-    if (possible.includes(guess)) {
-        game.guessWord(guess);
-        return res.redirect('/');
+    const wordLen = game.getWordLen();
+
+    if (
+        !guess ||
+        !helpers.isAlpha(guess) ||
+        !helpers.isOneWord(guess)
+    ) {
+        return res.redirect('/?guessError=' + "Only one word consists by letters is allowed.");
     }
 
-    return res.redirect('/?loginError=' + INVALID_USERNAME);
+    // Only valid guesses will be processed.
+    if (wordLen !== guess.length || !possible.includes(guess)) {
+        return res.redirect('/?guessError=' + "Your entry '" + guess + "' is not in the possible word lists");
+    }
+    game.guessWord(guess);
+    return res.redirect('/');
 };

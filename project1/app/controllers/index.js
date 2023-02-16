@@ -46,7 +46,7 @@ const getLoginForm = (sId, loginError) => {
     if (!sId || !sessions[sId]) {
         // Render the login page
         return `
-            <div id='login-form'>
+            <div class='login-form'>
                 <form action="/login" method="post">
                     <input type="text" name="username" placeholder="Username">
                     <button type="submit">Login</button>
@@ -80,7 +80,7 @@ const getLogoutButton = (sId) => {
     } else {
         // Render the logout button
         return `
-            <div id='logout'>
+            <div class='logout'>
                 <form action="/logout" method="post">
                     <button type="submit">Logout</button>
                 </form>
@@ -106,18 +106,18 @@ const getGames = (sId) => {
         if (success) {
             return ``;
         }
-        return (bestScore
-            ? `<h2>Personal Best: ${bestScore}</h2>`
-            : ``) +
+        return (
+            `<h2>` +
+            (bestScore
+                ? `Personal Best: ${bestScore}&nbsp&nbsp&nbsp&nbsp`
+                : ``) +
             `
-            <h2>Current Attempts: ${attempt}</h2>
+            Current Attempts: ${attempt}</h2>
             <div class="words-panel">
             <h2>Possible words</h2>
             <div class="possible-words"> ` +
-                possible
-                    .map((word) => `<div class="word">${word}</div>`)
-                    .join('') +
-                `</div>
+            possible.map((word) => `<div class="word">${word}</div>`).join('') +
+            `</div>
             </div>
         <div class="words-panel">` +
             (Object.keys(incorrect).length !== 0
@@ -131,7 +131,8 @@ const getGames = (sId) => {
                 )
                 .join('') +
             `</div>
-        </div>`;
+        </div>`
+        );
     }
 };
 

@@ -2,6 +2,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const sessions = require('../models/sessions');
 const helpers = require('../helpers/helpers');
+const Games = require('../models/games');
 
 // Login endpoint
 exports.post = (req, res) => {
@@ -22,6 +23,11 @@ exports.post = (req, res) => {
 
     // Send the session id as a cookie to the client
     res.cookie('sId', sId, { httpOnly: true });
+
+    const game = Games.getGame(username);
+    if (game.getSuccess()) {
+        game.startNewGame();
+    }
 
     return res.redirect('/');
 };

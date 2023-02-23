@@ -14,7 +14,7 @@ exports.post = (req, res) => {
         // Clear the session id cookie
         res.clearCookie('sId');
 
-        return res.redirect('/');
+        return res.redirect('/?loginError=' + 'Please sign in.');
     }
 
     const username = sessions[sId];
@@ -23,17 +23,20 @@ exports.post = (req, res) => {
     const possible = game.getPossible();
     const wordLen = game.getWordLen();
 
-    if (
-        !guess ||
-        !helpers.isAlpha(guess) ||
-        !helpers.isOneWord(guess)
-    ) {
-        return res.redirect('/?guessError=' + "Only one word consists by letters is allowed.");
+    if (!guess || !helpers.isAlpha(guess) || !helpers.isOneWord(guess)) {
+        return res.redirect(
+            '/?guessError=' + 'Only one word consists by letters is allowed.'
+        );
     }
 
     // Only valid guesses will be processed.
     if (wordLen !== guess.length || !possible.includes(guess)) {
-        return res.redirect('/?guessError=' + "Your entry '" + guess + "' is not in the possible word lists");
+        return res.redirect(
+            '/?guessError=' +
+                "Your entry '" +
+                guess +
+                "' is not in the possible word lists"
+        );
     }
     game.guessWord(guess);
     return res.redirect('/');

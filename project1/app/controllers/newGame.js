@@ -13,7 +13,7 @@ exports.post = (req, res) => {
         // Clear the session id cookie
         res.clearCookie('sId');
 
-        return res.redirect('/');
+        return res.redirect('/?loginError=' + 'Please sign in.');
     }
 
     const username = sessions[sId];

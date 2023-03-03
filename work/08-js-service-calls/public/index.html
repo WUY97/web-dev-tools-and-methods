@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html lang="en-us">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Guess the Word</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+
+    <body>
+        <header>
+            <h1>Guess the Word</h1>
+            <div id="login-status"></div>
+        </header>
+        <main>
+            <div id="login-container">
+                <div id="login-form">
+                    <form>
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required>
+                        <button type="submit">Login</button>
+                    </form>
+                    <div id="login-error"></div>
+                </div>
+                <button id="logout-btn">Logout</button>
+            </div>
+            <div id="game-container">
+                <div id="current-guess"></div>
+                <div id="guess-form">
+                    <form>
+                        <label for="word">Your guess: </label>
+                        <input type="text" id="word" name="word" required>
+                        <button type="submit">Try</button>
+                    </form>
+                    <div id="guess-error"></div>
+                </div>
+            </div>
+        </main>
+
+        <script src="index.js"></script>
+    </body>
+
+</html>

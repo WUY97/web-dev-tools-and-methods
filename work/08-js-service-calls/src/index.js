@@ -17,19 +17,35 @@ const guessForm = document.querySelector('#guess-form');
 const currentGuess = document.querySelector('#current-guess');
 const guessError = document.querySelector('#guess-error');
 
+// Render error messages based on server response
+function renderErrorMessage(error) {
+    if (error === 'auth-missing') {
+        return 'Missing credentials. You must be logged in to play the game.';
+    } else if (error === 'auth-insufficient') {
+        return 'Forbidden username. You cannot play the game as "dog".';
+    } else if (error === 'required-username') {
+        return 'Invalid username. Username can only contain letters and numbers.';
+    } else if (error === 'required-word') {
+        return 'Word missing. You must provide a word.';
+    } else if (error === 'invalid-word') {
+        return 'Invalid word. Word can only contain letters.';
+    }
+}
+
 // Handle the login form submit
 function handleLoginFormSubmit(event) {
     event.preventDefault();
     const username = document.getElementById('username').value;
     fetchLogin(username)
         .then((result) => {
+            loginError.style.display = 'none';
+            loginError.textContent = '';
             renderLoginStatus();
         })
         .catch((error) => {
-            loginError.innerHTML =
-                '<p>Login error: ' +
-                error.error +
-                '. Please try again later.</p>';
+            loginError.style.display = 'block';
+            loginError.textContent =
+                'Login error: ' + renderErrorMessage(error.error);
             renderLoginStatus();
         });
 }
@@ -53,14 +69,14 @@ function handleGuessFormSubmit(event) {
     updateWordGuess(word)
         .then((result) => {
             renderGameStatus();
-            guessError.innerHTML ='';
+            guessError.style.display = 'none';
+            guessError.textContent = '';
         })
         .catch((error) => {
             renderGameStatus();
-            guessError.innerHTML =
-                '<p>Guess error: ' +
-                error.error +
-                '. Please try again later.</p>';
+            guessError.style.display = 'block';
+            guessError.textContent =
+                'Guess error: ' + renderErrorMessage(error.error);
         });
 }
 
@@ -79,21 +95,21 @@ function renderLoginStatus() {
 
 // Render the login form
 function renderLoginForm() {
-    loginForm.style.display = 'block';
+    loginForm.style.display = 'flex';
     logoutBtn.style.display = 'none';
-    loginStatus.innerHTML = 'Not logged in';
+    loginStatus.innerHTML = 'Enter username to start:';
 }
 
 // Hide the login form
 function hideLoginForm(username) {
     loginForm.style.display = 'none';
-    logoutBtn.style.display = 'block';
+    logoutBtn.style.display = 'flex';
     loginStatus.innerHTML = 'Logged in as: ' + username;
 }
 
 // Render the game container
 function renderGameContainer() {
-    gameContainer.style.display = 'block';
+    gameContainer.style.display = 'flex';
     renderGameStatus();
 }
 

@@ -41,7 +41,7 @@ export function checkLoginStatus() {
     return fetch('/api/session/', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
         credentials: 'include',
     })
@@ -59,7 +59,7 @@ export function fetchLogout() {
     return fetch('/api/session/', {
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
         credentials: 'include',
     })
@@ -74,38 +74,38 @@ export function fetchLogout() {
 }
 
 export function checkGameStatus() {
-  return fetch('/api/word/', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-  })
-      .catch((err) => Promise.reject({ error: 'network-error' }))
-      .then((response) => {
-          if (!response.ok) {
-              return response.json().then((err) => Promise.reject(err));
-          }
+    return fetch('/api/word/', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+        .catch((err) => Promise.reject({ error: 'network-error' }))
+        .then((response) => {
+            if (!response.ok) {
+                return response.json().then((err) => Promise.reject(err));
+            }
 
-          return response.json();
-      });
+            return response.json();
+        });
 }
 
 export function updateWordGuess(word) {
-  return fetch('/api/word/', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify({ word })
-  })
-      .catch((err) => Promise.reject({ error: 'network-error' }))
-      .then((response) => {
-          if (!response.ok) {
-              return response.json().then((err) => Promise.reject(err));
-          }
+    return fetch('/api/word/', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ word }),
+    })
+        .catch((err) => Promise.reject({ error: 'network-error' }))
+        .then((response) => {
+            if (!response.ok) {
+                return response.json().then((err) => Promise.reject(err));
+            }
 
-          return response.json();
-      });
+            return response.json();
+        });
 }

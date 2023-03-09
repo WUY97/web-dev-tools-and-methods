@@ -100,7 +100,8 @@ app.put('/api/word', (req, res) => {
 
   const { word } = req.body;
 
-  if(!word && word !== '') {
+  // if(!word && word !== '') {
+  if(!word && word === '') {
     res.status(400).json({ error: 'required-word' });
     return;
   }

@@ -12,34 +12,40 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+            rel="stylesheet">
     </head>
 
     <body>
         <header>
             <h1>Guess the Word</h1>
-            <div id="login-status"></div>
         </header>
         <main>
             <div id="login-container">
+                <h2 id="login-status"></h2>
                 <div id="login-form">
                     <form>
                         <label for="username">Username</label>
-                        <input type="text" id="username" name="username" required>
+                        <input type="text" id="username" name="username">
+                        <p id="login-error"></p>
                         <button type="submit">Login</button>
                     </form>
-                    <div id="login-error"></div>
+                    
                 </div>
-                <button id="logout-btn">Logout</button>
+                <button type="submit" id="logout-btn">Logout</button>
             </div>
             <div id="game-container">
-                <div id="current-guess"></div>
+                <h2 id="current-guess"></h2>
                 <div id="guess-form">
                     <form>
-                        <label for="word">Your guess: </label>
-                        <input type="text" id="word" name="word" required>
+                        <label for="word">Your guess</label>
+                        <input type="text" id="word" name="word">
+                        <p id="guess-error"></p>
                         <button type="submit">Try</button>
                     </form>
-                    <div id="guess-error"></div>
                 </div>
             </div>
         </main>

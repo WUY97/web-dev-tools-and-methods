@@ -1,19 +1,124 @@
 * {
     margin: 0;
+    font-family: 'Roboto', sans-serif;
 }
 
-body {
-    background-color: lightblue;
+header {
+    background-color: #49454f;
+    padding: 0 5rem;
+    color: white;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+}
+
+main {
+    padding: 0 5rem;
+    display: grid;
+    grid-template-columns: 3fr 4fr;
+    column-gap: 3rem;
+    height: calc(100vh - 4rem);
+    align-items: center;
+    background: rgb(165, 142, 226);
+    background: radial-gradient(
+        circle,
+        rgba(165, 142, 226, 1) 0%,
+        rgba(255, 255, 255, 1) 100%
+    );
+}
+
+button {
+    border: none;
+    padding: 1rem 2rem;
+    text-transform: uppercase;
+    text-align: center;
+    background-color: #6750a4;
+    border-radius: 3rem;
+    color: white;
+    font-weight: 700;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+label {
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+input {
+    border: none;
+    padding: 1rem;
+    border-radius: 3rem;
+}
+
+input:focus {
+    outline: none;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+input,
+label {
+    color: #49454f;
+}
+
+#login-container {
+    background-color: rgb(253, 252, 255, 0.7);
+    border-radius: 1rem;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    height: 30%;
+    max-height: 20rem;
+    justify-content: space-around;
+}
+
+#game-container {
+    border-radius: 1rem;
+    display: none;
+    background-color: rgb(253, 252, 255, 0.7);
+    padding: 3rem;
+    flex-direction: column;
+    height: 30%;
+    max-height: 20rem;
+    justify-content: space-around;
 }
 
 #login-form {
     display: none;
+    flex-direction: column;
+}
+
+#login-form form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.8rem;
+}
+
+#guess-form {
+    flex-direction: column;
+}
+
+#guess-form form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.8rem;
 }
 
 #logout-btn {
     display: none;
 }
 
-#game-container {
+#login-error,
+#guess-error {
     display: none;
+    color: #e46962;
+    font-weight: 500;
+    font-size: 0.9rem;
 }

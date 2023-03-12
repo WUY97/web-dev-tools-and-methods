@@ -5,11 +5,9 @@
 
 button {
     border: none;
-    padding: 1rem 2rem;
     text-transform: uppercase;
     text-align: center;
     background-color: #6750a4;
-    border-radius: 3rem;
     color: white;
     font-weight: 700;
 }
@@ -56,6 +54,16 @@ header {
     justify-content: space-between;
 }
 
+#logged-user {
+    font-weight: 700;
+}
+
+#logout-btn {
+    height: 80%;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+}
+
 main {
     height: calc(100vh - 4rem);
     background: rgb(165, 142, 226);
@@ -79,7 +87,7 @@ main {
     left: 50%;
     right: 50%;
     transform: translate(-50%, -50%);
-    max-width: 50rem;
+    max-width: 30rem;
     row-gap: 3rem;
 }
 
@@ -112,10 +120,11 @@ main {
     width: 100%;
     display: grid;
     grid-template-areas:
+        'users header'
         'users messages'
         'users outgoing';
     grid-template-columns: 3fr 9fr;
-    grid-template-rows: 9fr 3fr;
+    grid-template-rows: 1fr 8fr 3fr;
 }
 
 #user-list {
@@ -125,12 +134,53 @@ main {
     list-style-type: none;
     display: flex;
     flex-direction: column;
-    row-gap: 0.1rem;
+    row-gap: 0.75rem;
     background-color: #e3e0df;
     border-right: 1px solid #cccccc;
 }
 
-#message-list {
+.user {
+    display: flex;
+    align-items: center;
+}
+
+.user:hover {
+    cursor: pointer;
+}
+
+.avatar {
+    display: flex;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    margin-right: 1rem;
+    background-color: #6750a4;
+    color: white;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+}
+
+.username {
+    font-size: 1.1rem;
+    color: #49454f;
+}
+
+#chat-header {
+    grid-area: header;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    color: black;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #cccccc;
+}
+
+#message-container {
     grid-area: messages;
     padding: 2rem;
     margin: 0;
@@ -145,11 +195,59 @@ main {
         -o-transform: rotateX(180deg); /* Opera */
 }
 
+#message-list {
+    transform: rotateX(180deg);
+        -moz-transform: rotateX(180deg); /* Mozilla */
+        -webkit-transform: rotateX(180deg); /* Safari and Chrome */
+        -ms-transform: rotateX(180deg); /* IE 9+ */
+        -o-transform: rotateX(180deg); /* Opera */
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+}
+
+.message {
+    display: flex;
+    align-items: center;
+}
+
+.message-sent {
+    justify-content: flex-end;
+}
+
+.message-received {
+    justify-content: flex-start;
+}
+
+.message-avatar {
+    display: flex;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    background-color: #6750a4;
+    color: white;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+}
+
+.message-content {
+
+}
+
 #outgoing-message {
     background-color: #f5f5f5;
     grid-area: outgoing;
     padding: 1.2rem;
     position: relative;
+}
+
+#message-input {
+    display: none;
 }
 
 #to-send {

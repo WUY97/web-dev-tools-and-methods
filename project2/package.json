@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx webpack && node server.js",
-    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "dev": "concurrently \"webpack --watch\" \"nodemon server.js\"",
     "build": "npx webpack"
   },
   "keywords": [],
@@ -22,6 +22,7 @@
     "@babel/core": "^7.21.0",
     "@babel/preset-env": "^7.20.2",
     "babel-loader": "^9.1.2",
+    "concurrently": "^7.6.0",
     "nodemon": "^2.0.21",
     "webpack": "^5.76.0",
     "webpack-cli": "^5.0.1",

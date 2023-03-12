@@ -25,19 +25,22 @@ function addMessage(sender, receiver, text) {
 }
 
 function getConversation(sender, receiver) {
-    return chats.find((conversation) => {
-        return conversation.participants.includes(sender) &&
-            conversation.participants.includes(receiver);
+    let conversation = chats.find((chat) => {
+        return (
+            chat.participants.includes(sender) &&
+            chat.participants.includes(receiver)
+        );
     });
-}
 
-function getChats(username) {
-    return chats.filter((conversation) => {
-        return conversation.participants.includes(username);
-    });
+    if (!conversation) {
+        conversation = { participants: [sender, receiver].sort(), messages: [] }
+        chats.push(conversation);
+    }
+
+    return conversation;
 }
 
 module.exports = {
     addMessage,
-    getChats,
-}
+    getConversation,
+};

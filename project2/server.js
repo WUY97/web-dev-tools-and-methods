@@ -58,9 +58,7 @@ app.delete('/api/session', (req, res) => {
         sessions.deleteSession(sid);
     }
 
-    // We don't report any error if sid or session didn't exist
-    // Because that means we already have what we want
-    res.json({ wasLoggedIn: !!username }); // Provides some extra info that can be safely ignored
+    res.json({ wasLoggedIn: !!username });
 });
 
 app.get('/api/chat', (req, res) => {
@@ -72,9 +70,11 @@ app.get('/api/chat', (req, res) => {
         return;
     }
 
-    const chatList = chats.getChats(username);
+    const { username2 } = req.query;
 
-    res.json(chatList);
+    const conversation = chats.getConversation(username, username2);
+
+    res.json(conversation);
 });
 
 app.post('/api/chat', (req, res) => {
@@ -94,9 +94,9 @@ app.post('/api/chat', (req, res) => {
 
     chats.addMessage(username, receiver, text);
 
-    const chatList = chats.getChats(username);
+    const conversation = chats.getConversation(username, receiver);
 
-    res.json(chatList);
+    res.json(conversation);
 });
 
 app.get('/api/user', (req, res) => {

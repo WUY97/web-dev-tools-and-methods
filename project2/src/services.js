@@ -54,15 +54,15 @@ export function fetchLogout() {
         });
 }
 
-export function updateChat() {
-    return fetch('/api/chat/', {
+export function updateChat(username2) {
+    return fetch(`/api/chat?username2=${username2}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
         credentials: 'include',
     })
-        .catch((err) => Promise.reject({ error: 'network-error' }))
+        .catch((err) => Promise.reject({ error: err }))
         .then((response) => {
             if (!response.ok) {
                 return response.json().then((err) => Promise.reject(err));
@@ -72,14 +72,14 @@ export function updateChat() {
         });
 }
 
-export function addMessage(word) {
-    return fetch('/api/word/', {
+export function addMessage(text, receiver) {
+    return fetch('/api/chat/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ word, receiver }),
+        body: JSON.stringify({ text, receiver }),
     })
         .catch((err) => Promise.reject({ error: 'network-error' }))
         .then((response) => {

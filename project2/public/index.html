@@ -8,7 +8,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Discord</title>
+        <title>ChatApp</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="styles.css">
@@ -16,18 +16,19 @@
 
     <body>
         <header>
-            <h1>Discord</h1>
+            <h1>ChatApp</h1>
             <div id="login-status">
                 <p id="logged-user"></p><button type="submit" id="logout-btn">Logout</button>
             </div>
         </header>
         <main>
             <div id="login-container">
-                <h2>Login</h2>
+                <h2>Welcome Back!</h2>
+                <p>We are happy that you are with us!</p>
                 <form id="login-form">
-                    <label for="username">Username <input type="text" id="username" name="username"></label>
+                    <label for="username">Username<input type="text" id="username" name="username" placeholder="Enter your username"></label>
                     <p id="login-error"></p>
-                    <button id='logout-btn' type="submit">Login</button>
+                    <button id='login-btn' type="submit">Login</button>
                 </form>
             </div>
             <div id="chat-container">

@@ -219,6 +219,8 @@ function renderErrorMessage(error) {
     return 'Word missing. You must provide a word.';
   } else if (error === 'invalid-word') {
     return 'Invalid word. Word can only contain letters.';
+  } else if (error === 'network-error') {
+    return 'Network error. Please check your connection and try again.';
   }
 }
 

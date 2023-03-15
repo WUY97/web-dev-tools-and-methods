@@ -28,6 +28,8 @@ function renderErrorMessage(error) {
         return 'Message cannot be empty.';
     } else if (error === 'user-not-found') {
         return "The user you're sending message to does not exist or is offline.";
+    } else if (error === 'network-error') {
+        return 'Network error. Please check your internet connection.';
     }
 }
 

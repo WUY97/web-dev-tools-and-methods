@@ -57,6 +57,8 @@ function renderErrorMessage(error) {
     return 'Message cannot be empty.';
   } else if (error === 'user-not-found') {
     return "The user you're sending message to does not exist or is offline.";
+  } else if (error === 'network-error') {
+    return 'Network error. Please check your internet connection.';
   }
 }
 
@@ -435,6 +437,8 @@ const outgoingMessage = document.querySelector('#outgoing-message');
 // Logged in user's name & chat partner's name
 let username1, username2;
 
+// TODO: replace username identifier with a session identifier
+
 // Handle the login form submit
 function handleLoginContainerSubmit(event) {
   event.preventDefault();
@@ -448,6 +452,7 @@ function handleLoginContainerSubmit(event) {
     renderLoginError(error.error);
     renderLoginStatus();
     disableSendButton();
+    hideLoadingIndicator();
   });
 }
 

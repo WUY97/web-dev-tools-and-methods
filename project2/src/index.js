@@ -42,6 +42,8 @@ const outgoingMessage = document.querySelector('#outgoing-message');
 // Logged in user's name & chat partner's name
 let username1, username2;
 
+// TODO: replace username identifier with a session identifier
+
 // Handle the login form submit
 function handleLoginContainerSubmit(event) {
     event.preventDefault();
@@ -57,6 +59,7 @@ function handleLoginContainerSubmit(event) {
             renderLoginError(error.error);
             renderLoginStatus();
             disableSendButton();
+            hideLoadingIndicator();
         });
 }
 
@@ -106,6 +109,7 @@ function renderOnlineUsers() {
 function handleUserClick(event) {
     event.preventDefault();
     showLoadingIndicator();
+    // TODO: Change the way of getting username2
     username2 = null;
     const div = event.target.closest('div');
     username2 = div.getAttribute('data-username');

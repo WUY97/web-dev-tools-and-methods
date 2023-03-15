@@ -12,6 +12,7 @@ const chatHeader = document.querySelector('#chat-header');
 const messageInput = document.querySelector('#message-input');
 const toSend = document.querySelector('#to-send');
 const messageError = document.querySelector('#message-error');
+const sendBtn = document.querySelector('#send-btn');
 
 const loader = document.querySelector('#loader');
 
@@ -25,6 +26,8 @@ function renderErrorMessage(error) {
         return 'Invalid username. Username can only contain letters and numbers and should be within length from 2 to 20.';
     } else if (error === 'required-text') {
         return 'Message cannot be empty.';
+    } else if (error === 'user-not-found') {
+        return "The user you're sending message to does not exist or is offline.";
     }
 }
 
@@ -131,6 +134,14 @@ export function hideConversation() {
 
     // Clear form value
     toSend.value = '';
+}
+
+export function disableSendButton() {
+    sendBtn.disabled = true;
+}
+
+export function enableSendButton() {
+    sendBtn.disabled = false;
 }
 
 export function renderChatMessage(messages) {

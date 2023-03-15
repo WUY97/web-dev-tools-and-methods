@@ -98,6 +98,11 @@ app.post('/api/chat', (req, res) => {
 
     const { text, receiver } = req.body;
 
+    if (!sessions.getOnlineUsers().includes(receiver)) {
+        res.status(400).json({ error: 'user-not-found' });
+        return;
+    }
+
     if (!text && text === '') {
         res.status(400).json({ error: 'required-text' });
         return;

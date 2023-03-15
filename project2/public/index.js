@@ -10,7 +10,9 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "disableSendButton": () => (/* binding */ disableSendButton),
 /* harmony export */   "displayUsers": () => (/* binding */ displayUsers),
+/* harmony export */   "enableSendButton": () => (/* binding */ enableSendButton),
 /* harmony export */   "hideChatContainer": () => (/* binding */ hideChatContainer),
 /* harmony export */   "hideConversation": () => (/* binding */ hideConversation),
 /* harmony export */   "hideLoadingIndicator": () => (/* binding */ hideLoadingIndicator),
@@ -40,6 +42,7 @@ const chatHeader = document.querySelector('#chat-header');
 const messageInput = document.querySelector('#message-input');
 const toSend = document.querySelector('#to-send');
 const messageError = document.querySelector('#message-error');
+const sendBtn = document.querySelector('#send-btn');
 const loader = document.querySelector('#loader');
 
 // Render error messages based on server response
@@ -52,6 +55,8 @@ function renderErrorMessage(error) {
     return 'Invalid username. Username can only contain letters and numbers and should be within length from 2 to 20.';
   } else if (error === 'required-text') {
     return 'Message cannot be empty.';
+  } else if (error === 'user-not-found') {
+    return "The user you're sending message to does not exist or is offline.";
   }
 }
 
@@ -155,6 +160,12 @@ function hideConversation() {
 
   // Clear form value
   toSend.value = '';
+}
+function disableSendButton() {
+  sendBtn.disabled = true;
+}
+function enableSendButton() {
+  sendBtn.disabled = false;
 }
 function renderChatMessage(messages) {
   messageList.innerHTML = '';
@@ -406,7 +417,9 @@ const {
   showLoadingIndicator,
   hideLoadingIndicator,
   renderMessageError,
-  hideMessageError
+  hideMessageError,
+  disableSendButton,
+  enableSendButton
 } = __webpack_require__(/*! ./components.js */ "./src/components.js");
 
 // Login and logout related elements
@@ -434,7 +447,7 @@ function handleLoginContainerSubmit(event) {
   }).catch(error => {
     renderLoginError(error.error);
     renderLoginStatus();
-    hideLoadingIndicator();
+    disableSendButton();
   });
 }
 
@@ -468,7 +481,12 @@ function renderOnlineUsers() {
     hideLoadingIndicator();
   });
   setInterval(() => {
-    getOnlineUsers().then(displayUsers);
+    getOnlineUsers().then(result => {
+      displayUsers(result);
+      if (result.includes(username2)) {
+        enableSendButton();
+      }
+    });
   }, 5000);
 }
 
@@ -490,6 +508,8 @@ function handleUserClick(event) {
     renderMessageInput();
     hideLoadingIndicator();
   });
+
+  // TODO: Add notification for new messages when user is not focused on the window
   setInterval(() => {
     updateChat(username2).then(result => {
       renderChatMessage(result.messages);
@@ -510,6 +530,9 @@ function handleMessageSubmit(event) {
     hideLoadingIndicator();
   }).catch(error => {
     renderMessageError(error.error);
+    if (error.error === 'user-not-found') {
+      disableSendButton();
+    }
     hideLoadingIndicator();
   });
 }

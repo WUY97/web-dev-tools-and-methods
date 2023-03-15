@@ -25,6 +25,8 @@ const {
     hideLoadingIndicator,
     renderMessageError,
     hideMessageError,
+    disableSendButton,
+    enableSendButton,
 } = require('./components.js');
 
 // Login and logout related elements
@@ -54,7 +56,7 @@ function handleLoginContainerSubmit(event) {
         .catch((error) => {
             renderLoginError(error.error);
             renderLoginStatus();
-            hideLoadingIndicator();
+            disableSendButton();
         });
 }
 
@@ -62,11 +64,10 @@ function handleLoginContainerSubmit(event) {
 function handleLogoutClick(event) {
     event.preventDefault();
     showLoadingIndicator();
-    fetchLogout()
-        .then((result) => {
-            renderLoginStatus();
-            hideLoadingIndicator();
-        })
+    fetchLogout().then((result) => {
+        renderLoginStatus();
+        hideLoadingIndicator();
+    });
 }
 
 // Render the login status
@@ -92,7 +93,12 @@ function renderOnlineUsers() {
     });
 
     setInterval(() => {
-        getOnlineUsers().then(displayUsers);
+        getOnlineUsers().then((result) => {
+            displayUsers(result);
+            if (result.includes(username2)) {
+                enableSendButton();
+            }
+        });
     }, 5000);
 }
 
@@ -116,6 +122,7 @@ function handleUserClick(event) {
         hideLoadingIndicator();
     });
 
+    // TODO: Add notification for new messages when user is not focused on the window
     setInterval(() => {
         updateChat(username2).then((result) => {
             renderChatMessage(result.messages);
@@ -129,16 +136,21 @@ function handleMessageSubmit(event) {
     showLoadingIndicator();
     const text = toSend.value;
 
-    addMessage(text, username2).then((result) => {
-        renderChatMessage(result.messages);
-        hideMessageError();
-        toSend.value = '';
-        toSend.focus();
-        hideLoadingIndicator();
-    }).catch((error) => {
-        renderMessageError(error.error);
-        hideLoadingIndicator();
-    });
+    addMessage(text, username2)
+        .then((result) => {
+            renderChatMessage(result.messages);
+            hideMessageError();
+            toSend.value = '';
+            toSend.focus();
+            hideLoadingIndicator();
+        })
+        .catch((error) => {
+            renderMessageError(error.error);
+            if (error.error === 'user-not-found') {
+                disableSendButton();
+            }
+            hideLoadingIndicator();
+        });
 }
 
 // Initialize the page

@@ -404,6 +404,12 @@ main {
     font-weight: 600;
 }
 
+#send-btn:disabled {
+    background-color: #ebebeb;
+    color: #a8a8a8;
+    cursor: not-allowed;
+}
+
 #send-btn:hover {
     cursor: pointer;
 }

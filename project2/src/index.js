@@ -19,6 +19,12 @@ const {
     displayUsers,
     renderChatHeader,
     renderChatMessage,
+    hideConversation,
+    renderMessageInput,
+    showLoadingIndicator,
+    hideLoadingIndicator,
+    renderMessageError,
+    hideMessageError,
 } = require('./components.js');
 
 // Login and logout related elements
@@ -30,7 +36,6 @@ const logoutBtn = document.querySelector('#logout-btn');
 const userList = document.querySelector('#user-list');
 const toSend = document.querySelector('#to-send');
 const outgoingMessage = document.querySelector('#outgoing-message');
-const messageInput = document.querySelector('#message-input');
 
 // Logged in user's name & chat partner's name
 let username1, username2;
@@ -39,27 +44,29 @@ let username1, username2;
 function handleLoginContainerSubmit(event) {
     event.preventDefault();
     username1 = username.value;
+    showLoadingIndicator();
     fetchLogin(username1)
         .then((result) => {
             hideLoginError();
             renderLoginStatus();
+            hideLoadingIndicator();
         })
         .catch((error) => {
             renderLoginError(error.error);
             renderLoginStatus();
+            hideLoadingIndicator();
         });
 }
 
 // Handle the logout button click
 function handleLogoutClick(event) {
     event.preventDefault();
+    showLoadingIndicator();
     fetchLogout()
         .then((result) => {
             renderLoginStatus();
+            hideLoadingIndicator();
         })
-        .catch((error) => {
-            console.log(error);
-        });
 }
 
 // Render the login status
@@ -78,7 +85,11 @@ function renderLoginStatus() {
 
 // Render the online users
 function renderOnlineUsers() {
-    getOnlineUsers().then(displayUsers);
+    showLoadingIndicator();
+    getOnlineUsers().then((result) => {
+        displayUsers(result);
+        hideLoadingIndicator();
+    });
 
     setInterval(() => {
         getOnlineUsers().then(displayUsers);
@@ -88,17 +99,21 @@ function renderOnlineUsers() {
 // Handle the user click online user
 function handleUserClick(event) {
     event.preventDefault();
+    showLoadingIndicator();
     username2 = null;
     const div = event.target.closest('div');
     username2 = div.getAttribute('data-username');
     if (!username2) {
+        hideConversation();
+        hideLoadingIndicator();
         return;
     }
 
     updateChat(username2).then((result) => {
         renderChatHeader(username2);
         renderChatMessage(result.messages);
-        messageInput.style.display = 'block';
+        renderMessageInput();
+        hideLoadingIndicator();
     });
 
     setInterval(() => {
@@ -111,15 +126,19 @@ function handleUserClick(event) {
 // Handle the message submit
 function handleMessageSubmit(event) {
     event.preventDefault();
-
+    showLoadingIndicator();
     const text = toSend.value;
 
     addMessage(text, username2).then((result) => {
         renderChatMessage(result.messages);
+        hideMessageError();
+        toSend.value = '';
+        toSend.focus();
+        hideLoadingIndicator();
+    }).catch((error) => {
+        renderMessageError(error.error);
+        hideLoadingIndicator();
     });
-
-    toSend.value = '';
-    toSend.focus();
 }
 
 // Initialize the page

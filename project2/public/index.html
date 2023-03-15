@@ -38,12 +38,14 @@
                 <div id="outgoing-message">
                     <form id='message-input' name="name" method="post">
                         <textarea id="to-send" name="text" placeholder="Enter message to send"></textarea>
+                        <p id="message-error"></p>
                         <button id="send-btn" type="submit">Send</button>
                     </form>
                 </div>
             </div>
+            
         </main>
-
+        <span id="loader"></span>
         <script src="index.js"></script>
     </body>
 

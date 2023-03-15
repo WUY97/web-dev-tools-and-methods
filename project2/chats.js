@@ -1,16 +1,4 @@
-const chats = [
-    // conversation1, conversation2, ...
-];
-
-// const conversation = {
-//     participants: [username1, username2], length === 2
-//     messages: [message1, message2],
-// }
-
-// const message = {
-//     text: 'Hello',
-//     sender: 'nihao',
-// }
+const chats = [];
 
 function addMessage(sender, receiver, text) {
     const conversation = getConversation(sender, receiver);

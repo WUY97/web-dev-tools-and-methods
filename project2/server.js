@@ -71,6 +71,17 @@ app.get('/api/chat', (req, res) => {
     }
 
     const { username2 } = req.query;
+    
+    // TODO: ERROR MESSAGE IN THE FRONTEND
+    if (!username2 || username2 === '' ) {
+        res.status(400).json({ error: 'empty-username' });
+        return;
+    }
+
+    if (!sessions.getOnlineUsers().includes(username2)) {
+        res.status(400).json({ error: 'user-not-found' });
+        return;
+    }
 
     const conversation = chats.getConversation(username, username2);
 
@@ -88,7 +99,7 @@ app.post('/api/chat', (req, res) => {
     const { text, receiver } = req.body;
 
     if (!text && text === '') {
-        res.status(400).json({ error: 'required-word' });
+        res.status(400).json({ error: 'required-text' });
         return;
     }
 

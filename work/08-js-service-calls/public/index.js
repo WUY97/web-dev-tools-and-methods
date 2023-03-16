@@ -214,7 +214,7 @@ function renderErrorMessage(error) {
   } else if (error === 'auth-insufficient') {
     return 'Forbidden username. You cannot play the game as "dog".';
   } else if (error === 'required-username') {
-    return 'Invalid username. Username can only contain letters and numbers.';
+    return 'Invalid username. Username cannot be empty and can only contain letters and numbers.';
   } else if (error === 'required-word') {
     return 'Word missing. You must provide a word.';
   } else if (error === 'invalid-word') {

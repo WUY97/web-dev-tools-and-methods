@@ -20,6 +20,8 @@ const loader = document.querySelector('#loader');
 function renderErrorMessage(error) {
     if (error === 'auth-missing') {
         return 'Missing credentials. You must be logged in to play the game.';
+    } else if (error === 'empty-username') {
+        return 'Invalid username. Username cannot be empty.';
     } else if (error === 'auth-insufficient') {
         return 'Forbidden username. You cannot play the game as "dog".';
     } else if (error === 'required-username') {

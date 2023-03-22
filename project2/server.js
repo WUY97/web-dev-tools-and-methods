@@ -29,7 +29,6 @@ app.post('/api/session', (req, res) => {
     const { username } = req.body;
 
     if (!users.isValidUsername(username)) {
-        console.log(username);
         res.status(400).json({ error: 'required-username' });
         return;
     }
@@ -72,7 +71,6 @@ app.get('/api/chat', (req, res) => {
 
     const { username2 } = req.query;
     
-    // TODO: ERROR MESSAGE IN THE FRONTEND
     if (!username2 || username2 === '' ) {
         res.status(400).json({ error: 'empty-username' });
         return;

@@ -39,17 +39,15 @@ const userList = document.querySelector('#user-list');
 const toSend = document.querySelector('#to-send');
 const outgoingMessage = document.querySelector('#outgoing-message');
 
-// Logged in user's name & chat partner's name
-let username1, username2;
-
-// TODO: replace username identifier with a session identifier
+// Chat partner's name
+let username2;
 
 // Handle the login form submit
 function handleLoginContainerSubmit(event) {
     event.preventDefault();
-    username1 = username.value;
+    // username1 = username.value;
     showLoadingIndicator();
-    fetchLogin(username1)
+    fetchLogin(username.value)
         .then((result) => {
             hideLoginError();
             renderLoginStatus();
@@ -109,7 +107,6 @@ function renderOnlineUsers() {
 function handleUserClick(event) {
     event.preventDefault();
     showLoadingIndicator();
-    // TODO: Change the way of getting username2
     username2 = null;
     const div = event.target.closest('div');
     username2 = div.getAttribute('data-username');
@@ -126,7 +123,6 @@ function handleUserClick(event) {
         hideLoadingIndicator();
     });
 
-    // TODO: Add notification for new messages when user is not focused on the window
     setInterval(() => {
         updateChat(username2).then((result) => {
             renderChatMessage(result.messages);

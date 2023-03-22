@@ -49,6 +49,8 @@ const loader = document.querySelector('#loader');
 function renderErrorMessage(error) {
   if (error === 'auth-missing') {
     return 'Missing credentials. You must be logged in to play the game.';
+  } else if (error === 'empty-username') {
+    return 'Invalid username. Username cannot be empty.';
   } else if (error === 'auth-insufficient') {
     return 'Forbidden username. You cannot play the game as "dog".';
   } else if (error === 'required-username') {
@@ -226,9 +228,8 @@ function fetchLogin(username) {
   return fetch('/api/session/', {
     method: 'POST',
     headers: {
-      'content-type': 'application/json' // set this header when sending JSON in the body of request
+      'content-type': 'application/json'
     },
-
     body: JSON.stringify({
       username
     })
@@ -236,15 +237,11 @@ function fetchLogin(username) {
     error: 'network-error'
   })).then(response => {
     if (!response.ok) {
-      // response.ok checks the status code from the service
-      // This service returns JSON on errors,
-      // so we use that as the error object and reject
       return response.json().then(err => Promise.reject(err));
     }
-    return response.json(); // happy status code means resolve with data from service
+    return response.json();
   });
 }
-
 function checkLoginStatus() {
   return fetch('/api/session/', {
     method: 'GET',
@@ -434,17 +431,15 @@ const userList = document.querySelector('#user-list');
 const toSend = document.querySelector('#to-send');
 const outgoingMessage = document.querySelector('#outgoing-message');
 
-// Logged in user's name & chat partner's name
-let username1, username2;
-
-// TODO: replace username identifier with a session identifier
+// Chat partner's name
+let username2;
 
 // Handle the login form submit
 function handleLoginContainerSubmit(event) {
   event.preventDefault();
-  username1 = username.value;
+  // username1 = username.value;
   showLoadingIndicator();
-  fetchLogin(username1).then(result => {
+  fetchLogin(username.value).then(result => {
     hideLoginError();
     renderLoginStatus();
     hideLoadingIndicator();
@@ -513,8 +508,6 @@ function handleUserClick(event) {
     renderMessageInput();
     hideLoadingIndicator();
   });
-
-  // TODO: Add notification for new messages when user is not focused on the window
   setInterval(() => {
     updateChat(username2).then(result => {
       renderChatMessage(result.messages);

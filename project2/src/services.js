@@ -1,5 +1,5 @@
 export function fetchLogin(username) {
-    return fetch('/api/session/', {
+    return fetch('/api/v1/session/', {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
@@ -16,7 +16,7 @@ export function fetchLogin(username) {
 }
 
 export function checkLoginStatus() {
-    return fetch('/api/session/', {
+    return fetch('/api/v1/session/', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export function checkLoginStatus() {
 }
 
 export function fetchLogout() {
-    return fetch('/api/session/', {
+    return fetch('/api/v1/session/', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export function fetchLogout() {
 }
 
 export function updateChat(username2) {
-    return fetch(`/api/chat?username2=${username2}`, {
+    return fetch(`/api/v1/chat?username2=${username2}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ export function updateChat(username2) {
 }
 
 export function addMessage(text, receiver) {
-    return fetch('/api/chat/', {
+    return fetch('/api/v1/chat/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ export function addMessage(text, receiver) {
 }
 
 export function getOnlineUsers() {
-    return fetch('/api/user/', {
+    return fetch('/api/v1/user/', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

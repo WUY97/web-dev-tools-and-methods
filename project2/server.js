@@ -14,7 +14,7 @@ app.use(express.json()); // Parses requests with json content bodies
 
 // Sessions
 // Check for existing session (used on page load)
-app.get('/api/session', (req, res) => {
+app.get('/api/v1/session', (req, res) => {
     const sid = req.cookies.sid;
     const username = sid ? sessions.getSessionUser(sid) : '';
     if (!sid || !username) {
@@ -25,7 +25,7 @@ app.get('/api/session', (req, res) => {
 });
 
 // Create a new session (login)
-app.post('/api/session', (req, res) => {
+app.post('/api/v1/session', (req, res) => {
     const { username } = req.body;
 
     if (!users.isValidUsername(username)) {
@@ -44,7 +44,7 @@ app.post('/api/session', (req, res) => {
     res.json({ username });
 });
 
-app.delete('/api/session', (req, res) => {
+app.delete('/api/v1/session', (req, res) => {
     const sid = req.cookies.sid;
     const username = sid ? sessions.getSessionUser(sid) : '';
 
@@ -60,7 +60,7 @@ app.delete('/api/session', (req, res) => {
     res.json({ wasLoggedIn: !!username });
 });
 
-app.get('/api/chat', (req, res) => {
+app.get('/api/v1/chat', (req, res) => {
     const sid = req.cookies.sid;
     const username = sid ? sessions.getSessionUser(sid) : '';
 
@@ -86,7 +86,7 @@ app.get('/api/chat', (req, res) => {
     res.json(conversation);
 });
 
-app.post('/api/chat', (req, res) => {
+app.post('/api/v1/chat', (req, res) => {
     const sid = req.cookies.sid;
     const username = sid ? sessions.getSessionUser(sid) : '';
     if (!sid || !username) {
@@ -113,7 +113,7 @@ app.post('/api/chat', (req, res) => {
     res.json(conversation);
 });
 
-app.get('/api/user', (req, res) => {
+app.get('/api/v1/user', (req, res) => {
     const sid = req.cookies.sid;
     const username = sid ? sessions.getSessionUser(sid) : '';
     if (!sid || !username) {

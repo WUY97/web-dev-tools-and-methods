@@ -225,7 +225,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "updateChat": () => (/* binding */ updateChat)
 /* harmony export */ });
 function fetchLogin(username) {
-  return fetch('/api/session/', {
+  return fetch('/api/v1/session/', {
     method: 'POST',
     headers: {
       'content-type': 'application/json'
@@ -243,7 +243,7 @@ function fetchLogin(username) {
   });
 }
 function checkLoginStatus() {
-  return fetch('/api/session/', {
+  return fetch('/api/v1/session/', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -259,7 +259,7 @@ function checkLoginStatus() {
   });
 }
 function fetchLogout() {
-  return fetch('/api/session/', {
+  return fetch('/api/v1/session/', {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json'
@@ -275,7 +275,7 @@ function fetchLogout() {
   });
 }
 function updateChat(username2) {
-  return fetch(`/api/chat?username2=${username2}`, {
+  return fetch(`/api/v1/chat?username2=${username2}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -291,7 +291,7 @@ function updateChat(username2) {
   });
 }
 function addMessage(text, receiver) {
-  return fetch('/api/chat/', {
+  return fetch('/api/v1/chat/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -311,7 +311,7 @@ function addMessage(text, receiver) {
   });
 }
 function getOnlineUsers() {
-  return fetch('/api/user/', {
+  return fetch('/api/v1/user/', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'

@@ -147,7 +147,7 @@ function hideConversation() {
   chatHeader.innerHTML = '';
 
   // Clear message list and set default message
-  messageList.innerHTML = `<p id='start-message'>To start chatting - choose a conversation 😎</p>`;
+  messageList.innerHTML = `<p id='start-message'>To start chatting - choose a conversation</p>`;
 
   // Hide message input
   messageInput.style.display = 'none';
@@ -195,9 +195,10 @@ function showLoadingIndicator() {
 function hideLoadingIndicator() {
   loader.style.display = 'none';
 }
-function renderNotification(message, duration) {
+function renderNotification(message, duration, color) {
   newNotification.style.display = 'block';
   newNotification.textContent = message;
+  newNotification.style.backgroundColor = color;
   setTimeout(() => {
     newNotification.style.display = 'none';
     newNotification.textContent = '';
@@ -489,7 +490,7 @@ function handleLogoutClick(event) {
   showLoadingIndicator();
   fetchLogout().then(result => {
     clearState();
-    renderNotification('You have successfully logged out.', 5000);
+    renderNotification('You have successfully logged out.', 5000, 'green');
     renderLoginContainer();
     hideChatContainer();
     hideLoadingIndicator();
@@ -508,6 +509,8 @@ function renderLoginStatus() {
     renderOnlineUsers();
   }).catch(error => {
     clearState();
+    clearInterval(updateChatInterval);
+    clearInterval(onlineUserInterval);
     renderLoginContainer();
     hideChatContainer();
   });
@@ -524,12 +527,14 @@ function renderOnlineUsers() {
     hideLoadingIndicator();
   }).catch(error => {
     if (error.error === 'network-error') {
-      renderNotification('Network error: Please check your internet connection.', 10000);
+      renderNotification('Network error: Please check your internet connection.', 10000, 'red');
       return;
     }
     if (error.error === 'auth-missing') {
       clearState();
-      renderNotification('Login Error: You are logged out due to authentication error.', 5000);
+      renderNotification('Login Error: You are logged out due to authentication error.', 5000, 'red');
+      clearInterval(updateChatInterval);
+      clearInterval(onlineUserInterval);
       renderLoginContainer();
       hideChatContainer();
       return;
@@ -538,7 +543,7 @@ function renderOnlineUsers() {
   onlineUserInterval = setInterval(() => {
     getOnlineUsers().then(result => {
       if (!compareLists(result, state.onlineUsers)) {
-        renderNotification('Online users updated', 5000);
+        renderNotification('Online users updated', 5000, 'green');
         state.onlineUsers = result;
         displayUsers(state.onlineUsers);
       }
@@ -548,12 +553,14 @@ function renderOnlineUsers() {
     }).catch(error => {
       clearInterval(onlineUserInterval);
       if (error.error === 'network-error') {
-        renderNotification('Network error: Please check your internet connection.', 10000);
+        renderNotification('Network error: Please check your internet connection.', 10000, 'red');
         return;
       }
       if (error.error === 'auth-missing') {
         clearState();
-        renderNotification('Login Error: You are logged out due to authentication error.', 5000);
+        renderNotification('Login Error: You are logged out due to authentication error.', 5000, 'red');
+        clearInterval(updateChatInterval);
+        clearInterval(onlineUserInterval);
         renderLoginContainer();
         return;
       }
@@ -572,6 +579,7 @@ function handleUserClick(event) {
     state.currentChat = null;
     hideConversation();
     hideLoadingIndicator();
+    clearInterval(updateChatInterval);
     return;
   }
   renderChatHeader(state.currentChat);
@@ -585,28 +593,33 @@ function handleUserClick(event) {
     hideLoadingIndicator();
   }).catch(error => {
     if (error.error === 'network-error') {
-      renderNotification('Network error: Please check your internet connection.', 10000);
+      renderNotification('Network error: Please check your internet connection.', 10000, 'red');
       return;
     }
     if (error.error === 'auth-missing') {
       clearState();
-      renderNotification('Login Error: You are logged out due to authentication error.', 5000);
+      renderNotification('Login Error: You are logged out due to authentication error.', 5000, 'red');
+      clearInterval(updateChatInterval);
+      clearInterval(onlineUserInterval);
       renderLoginContainer();
       hideChatContainer();
       hideLoadingIndicator();
       return;
     }
     if (error.error === 'user-not-found') {
-      renderNotification('User ' + state.currentChat + ' is not online.', 5000);
+      renderNotification('User ' + state.currentChat + ' is not online.', 5000, 'red');
       hideConversation();
       state.currentChat = null;
       state.chatHistory = [];
+      clearInterval(updateChatInterval);
       hideLoadingIndicator();
       return;
     }
     if (error.error === 'empty-username') {
       state.chatHistory = [];
       state.currentChat = null;
+      clearInterval(updateChatInterval);
+      clearInterval(onlineUserInterval);
       hideConversation();
       hideLoadingIndicator();
       return;
@@ -621,26 +634,31 @@ function handleUserClick(event) {
     }).catch(error => {
       clearInterval(updateChatInterval);
       if (error.error === 'network-error') {
-        renderNotification('Network error: Please check your internet connection.', 10000);
+        renderNotification('Network error: Please check your internet connection.', 10000, 'red');
         return;
       }
       if (error.error === 'auth-missing') {
         clearState();
-        renderNotification('Login Error: You are logged out due to authentication error.', 5000);
+        renderNotification('Login Error: You are logged out due to authentication error.', 5000, 'red');
+        clearInterval(updateChatInterval);
+        clearInterval(onlineUserInterval);
         renderLoginContainer();
         return;
       }
       if (error.error === 'user-not-found') {
-        renderNotification('User ' + state.currentChat + ' is not online.', 5000);
+        renderNotification('User ' + state.currentChat + ' is not online.', 5000, 'red');
         hideConversation();
         state.currentChat = null;
         state.chatHistory = [];
+        clearInterval(updateChatInterval);
         return;
       }
       if (error.error === 'empty-username') {
         state.chatHistory = [];
         state.currentChat = null;
         hideConversation();
+        clearInterval(updateChatInterval);
+        clearInterval(onlineUserInterval);
         return;
       }
     });
@@ -659,23 +677,26 @@ function handleMessageSubmit(event) {
     hideLoadingIndicator();
   }).catch(error => {
     if (error.error === 'network-error') {
-      renderNotification('Network error: Please check your internet connection.', 10000);
+      renderNotification('Network error: Please check your internet connection.', 10000, 'red');
       return;
     }
     if (error.error === 'auth-missing') {
       clearState();
-      renderNotification('Login Error: You are logged out due to authentication error.', 5000);
+      renderNotification('Login Error: You are logged out due to authentication error.', 5000, 'red');
+      clearInterval(updateChatInterval);
+      clearInterval(onlineUserInterval);
       renderLoginContainer();
       hideChatContainer();
       hideLoadingIndicator();
       return;
     }
     if (error.error === 'user-not-found') {
-      renderNotification('User ' + state.currentChat + ' is not online.', 5000);
+      renderNotification('User ' + state.currentChat + ' is not online.', 5000, 'red');
       hideConversation();
       state.currentChat = null;
       state.chatHistory = [];
       hideLoadingIndicator();
+      clearInterval(updateChatInterval);
       return;
     }
     if (error.error === 'required-text') {

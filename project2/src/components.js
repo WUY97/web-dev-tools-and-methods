@@ -122,7 +122,7 @@ export function hideConversation() {
     chatHeader.innerHTML = '';
 
     // Clear message list and set default message
-    messageList.innerHTML = `<p id='start-message'>To start chatting - choose a conversation 😎</p>`;
+    messageList.innerHTML = `<p id='start-message'>To start chatting - choose a conversation</p>`;
 
     // Hide message input
     messageInput.style.display = 'none';
@@ -176,9 +176,10 @@ export function hideLoadingIndicator() {
     loader.style.display = 'none';
 }
 
-export function renderNotification(message, duration) {
+export function renderNotification(message, duration, color) {
     newNotification.style.display = 'block';
     newNotification.textContent = message;
+    newNotification.style.backgroundColor = color;
 
     setTimeout(() => {
         newNotification.style.display = 'none';

@@ -480,6 +480,9 @@ function handleLoginContainerSubmit(event) {
     hideLoadingIndicator();
   }).catch(error => {
     renderLoginError(error.error);
+    clearState();
+    clearInterval(updateChatInterval);
+    clearInterval(onlineUserInterval);
     hideLoadingIndicator();
   });
 }
@@ -490,6 +493,8 @@ function handleLogoutClick(event) {
   showLoadingIndicator();
   fetchLogout().then(result => {
     clearState();
+    clearInterval(updateChatInterval);
+    clearInterval(onlineUserInterval);
     renderNotification('You have successfully logged out.', 5000, 'green');
     renderLoginContainer();
     hideChatContainer();
@@ -619,7 +624,6 @@ function handleUserClick(event) {
       state.chatHistory = [];
       state.currentChat = null;
       clearInterval(updateChatInterval);
-      clearInterval(onlineUserInterval);
       hideConversation();
       hideLoadingIndicator();
       return;
@@ -658,7 +662,6 @@ function handleUserClick(event) {
         state.currentChat = null;
         hideConversation();
         clearInterval(updateChatInterval);
-        clearInterval(onlineUserInterval);
         return;
       }
     });

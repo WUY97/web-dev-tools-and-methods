@@ -17,8 +17,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "hideConversation": () => (/* binding */ hideConversation),
 /* harmony export */   "hideLoadingIndicator": () => (/* binding */ hideLoadingIndicator),
 /* harmony export */   "hideLoginContainer": () => (/* binding */ hideLoginContainer),
-/* harmony export */   "hideLoginError": () => (/* binding */ hideLoginError),
-/* harmony export */   "hideMessageError": () => (/* binding */ hideMessageError),
 /* harmony export */   "renderChatContainer": () => (/* binding */ renderChatContainer),
 /* harmony export */   "renderChatHeader": () => (/* binding */ renderChatHeader),
 /* harmony export */   "renderChatMessage": () => (/* binding */ renderChatMessage),
@@ -26,6 +24,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "renderLoginError": () => (/* binding */ renderLoginError),
 /* harmony export */   "renderMessageError": () => (/* binding */ renderMessageError),
 /* harmony export */   "renderMessageInput": () => (/* binding */ renderMessageInput),
+/* harmony export */   "renderNotification": () => (/* binding */ renderNotification),
 /* harmony export */   "showLoadingIndicator": () => (/* binding */ showLoadingIndicator)
 /* harmony export */ });
 // Login and logout related elements
@@ -43,6 +42,7 @@ const messageInput = document.querySelector('#message-input');
 const toSend = document.querySelector('#to-send');
 const messageError = document.querySelector('#message-error');
 const sendBtn = document.querySelector('#send-btn');
+const newNotification = document.querySelector('#new-notification');
 const loader = document.querySelector('#loader');
 
 // Render error messages based on server response
@@ -69,14 +69,9 @@ function renderLoginError(error) {
   loginError.style.display = 'block';
   loginError.textContent = 'Login error: ' + renderErrorMessage(error);
   setTimeout(() => {
-    hideLoginError();
+    loginError.style.display = 'none';
+    loginError.textContent = '';
   }, 10000);
-}
-
-// Hide the login error message
-function hideLoginError() {
-  loginError.style.display = 'none';
-  loginError.textContent = '';
 }
 
 // Render the message error message
@@ -84,14 +79,9 @@ function renderMessageError(error) {
   messageError.style.display = 'block';
   messageError.textContent = 'Message error: ' + renderErrorMessage(error);
   setTimeout(() => {
-    hideMessageError();
+    messageError.style.display = 'none';
+    messageError.textContent = '';
   }, 5000);
-}
-
-// Hide the message error message
-function hideMessageError() {
-  messageError.style.display = 'none';
-  messageError.textContent = '';
 }
 
 // Render the login form
@@ -205,6 +195,36 @@ function showLoadingIndicator() {
 function hideLoadingIndicator() {
   loader.style.display = 'none';
 }
+function renderNotification(message, duration) {
+  newNotification.style.display = 'block';
+  newNotification.textContent = message;
+  setTimeout(() => {
+    newNotification.style.display = 'none';
+    newNotification.textContent = '';
+  }, duration);
+}
+
+/***/ }),
+
+/***/ "./src/helpers.js":
+/*!************************!*\
+  !*** ./src/helpers.js ***!
+  \************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+exports.compareLists = (list1, list2) => {
+  list1.sort();
+  list2.sort();
+  if (list1.length !== list2.length) {
+    return false;
+  }
+  for (let i = 0; i < list1.length; i++) {
+    if (list1[i] !== list2[i]) {
+      return false;
+    }
+  }
+  return true;
+};
 
 /***/ }),
 
@@ -403,7 +423,6 @@ const {
 } = __webpack_require__(/*! ./services.js */ "./src/services.js");
 const {
   renderLoginError,
-  hideLoginError,
   renderLoginContainer,
   hideLoginContainer,
   renderChatContainer,
@@ -416,10 +435,13 @@ const {
   showLoadingIndicator,
   hideLoadingIndicator,
   renderMessageError,
-  hideMessageError,
   disableSendButton,
-  enableSendButton
+  enableSendButton,
+  renderNotification
 } = __webpack_require__(/*! ./components.js */ "./src/components.js");
+const {
+  compareLists
+} = __webpack_require__(/*! ./helpers.js */ "./src/helpers.js");
 
 // Login and logout related elements
 const username = document.querySelector('#username');
@@ -430,23 +452,33 @@ const logoutBtn = document.querySelector('#logout-btn');
 const userList = document.querySelector('#user-list');
 const toSend = document.querySelector('#to-send');
 const outgoingMessage = document.querySelector('#outgoing-message');
+const state = {
+  currentUser: null,
+  currentChat: null,
+  onlineUsers: [],
+  chatHistory: []
+};
 
-// Chat partner's name
-let username2;
+// intervals
+let onlineUserInterval;
+let updateChatInterval;
+function clearState() {
+  state.currentUser = null;
+  state.currentChat = null;
+  state.onlineUsers = [];
+  state.chatHistory = [];
+}
 
 // Handle the login form submit
 function handleLoginContainerSubmit(event) {
   event.preventDefault();
-  // username1 = username.value;
   showLoadingIndicator();
   fetchLogin(username.value).then(result => {
-    hideLoginError();
+    state.currentUser = result.username;
     renderLoginStatus();
     hideLoadingIndicator();
   }).catch(error => {
     renderLoginError(error.error);
-    renderLoginStatus();
-    disableSendButton();
     hideLoadingIndicator();
   });
 }
@@ -456,7 +488,10 @@ function handleLogoutClick(event) {
   event.preventDefault();
   showLoadingIndicator();
   fetchLogout().then(result => {
-    renderLoginStatus();
+    clearState();
+    renderNotification('You have successfully logged out.', 5000);
+    renderLoginContainer();
+    hideChatContainer();
     hideLoadingIndicator();
   });
 }
@@ -464,10 +499,15 @@ function handleLogoutClick(event) {
 // Render the login status
 function renderLoginStatus() {
   checkLoginStatus().then(result => {
-    hideLoginContainer(result.username);
+    if (result.username !== state.currentUser) {
+      clearState();
+      state.currentUser = result.username;
+    }
+    hideLoginContainer(state.currentUser);
     renderChatContainer();
     renderOnlineUsers();
   }).catch(error => {
+    clearState();
     renderLoginContainer();
     hideChatContainer();
   });
@@ -477,14 +517,45 @@ function renderLoginStatus() {
 function renderOnlineUsers() {
   showLoadingIndicator();
   getOnlineUsers().then(result => {
-    displayUsers(result);
+    if (!compareLists(result, state.onlineUsers)) {
+      state.onlineUsers = result;
+      displayUsers(state.onlineUsers);
+    }
     hideLoadingIndicator();
+  }).catch(error => {
+    if (error.error === 'network-error') {
+      renderNotification('Network error: Please check your internet connection.', 10000);
+      return;
+    }
+    if (error.error === 'auth-missing') {
+      clearState();
+      renderNotification('Login Error: You are logged out due to authentication error.', 5000);
+      renderLoginContainer();
+      hideChatContainer();
+      return;
+    }
   });
-  setInterval(() => {
+  onlineUserInterval = setInterval(() => {
     getOnlineUsers().then(result => {
-      displayUsers(result);
-      if (result.includes(username2)) {
+      if (!compareLists(result, state.onlineUsers)) {
+        renderNotification('Online users updated', 5000);
+        state.onlineUsers = result;
+        displayUsers(state.onlineUsers);
+      }
+      if (result.includes(state.currentChat)) {
         enableSendButton();
+      }
+    }).catch(error => {
+      clearInterval(onlineUserInterval);
+      if (error.error === 'network-error') {
+        renderNotification('Network error: Please check your internet connection.', 10000);
+        return;
+      }
+      if (error.error === 'auth-missing') {
+        clearState();
+        renderNotification('Login Error: You are logged out due to authentication error.', 5000);
+        renderLoginContainer();
+        return;
       }
     });
   }, 5000);
@@ -494,23 +565,84 @@ function renderOnlineUsers() {
 function handleUserClick(event) {
   event.preventDefault();
   showLoadingIndicator();
-  username2 = null;
   const div = event.target.closest('div');
-  username2 = div.getAttribute('data-username');
-  if (!username2) {
+  state.currentChat = div.getAttribute('data-username');
+  if (!state.currentChat) {
+    state.chatHistory = [];
+    state.currentChat = null;
     hideConversation();
     hideLoadingIndicator();
     return;
   }
-  updateChat(username2).then(result => {
-    renderChatHeader(username2);
-    renderChatMessage(result.messages);
+  renderChatHeader(state.currentChat);
+  renderChatMessage(state.chatHistory);
+  updateChat(state.currentChat).then(result => {
+    if (!compareLists(result.messages, state.chatHistory)) {
+      state.chatHistory = result.messages;
+      renderChatMessage(state.chatHistory);
+    }
     renderMessageInput();
     hideLoadingIndicator();
+  }).catch(error => {
+    if (error.error === 'network-error') {
+      renderNotification('Network error: Please check your internet connection.', 10000);
+      return;
+    }
+    if (error.error === 'auth-missing') {
+      clearState();
+      renderNotification('Login Error: You are logged out due to authentication error.', 5000);
+      renderLoginContainer();
+      hideChatContainer();
+      hideLoadingIndicator();
+      return;
+    }
+    if (error.error === 'user-not-found') {
+      renderNotification('User ' + state.currentChat + ' is not online.', 5000);
+      hideConversation();
+      state.currentChat = null;
+      state.chatHistory = [];
+      hideLoadingIndicator();
+      return;
+    }
+    if (error.error === 'empty-username') {
+      state.chatHistory = [];
+      state.currentChat = null;
+      hideConversation();
+      hideLoadingIndicator();
+      return;
+    }
   });
-  setInterval(() => {
-    updateChat(username2).then(result => {
-      renderChatMessage(result.messages);
+  updateChatInterval = setInterval(() => {
+    updateChat(state.currentChat).then(result => {
+      if (!compareLists(result.messages, state.chatHistory)) {
+        state.chatHistory = result.messages;
+        renderChatMessage(state.chatHistory);
+      }
+    }).catch(error => {
+      clearInterval(updateChatInterval);
+      if (error.error === 'network-error') {
+        renderNotification('Network error: Please check your internet connection.', 10000);
+        return;
+      }
+      if (error.error === 'auth-missing') {
+        clearState();
+        renderNotification('Login Error: You are logged out due to authentication error.', 5000);
+        renderLoginContainer();
+        return;
+      }
+      if (error.error === 'user-not-found') {
+        renderNotification('User ' + state.currentChat + ' is not online.', 5000);
+        hideConversation();
+        state.currentChat = null;
+        state.chatHistory = [];
+        return;
+      }
+      if (error.error === 'empty-username') {
+        state.chatHistory = [];
+        state.currentChat = null;
+        hideConversation();
+        return;
+      }
     });
   }, 5000);
 }
@@ -519,19 +651,38 @@ function handleUserClick(event) {
 function handleMessageSubmit(event) {
   event.preventDefault();
   showLoadingIndicator();
-  const text = toSend.value;
-  addMessage(text, username2).then(result => {
-    renderChatMessage(result.messages);
-    hideMessageError();
+  addMessage(toSend.value, state.currentUser).then(result => {
+    state.chatHistory = result.messages;
+    renderChatMessage(state.chatHistory);
     toSend.value = '';
     toSend.focus();
     hideLoadingIndicator();
   }).catch(error => {
-    renderMessageError(error.error);
-    if (error.error === 'user-not-found') {
-      disableSendButton();
+    if (error.error === 'network-error') {
+      renderNotification('Network error: Please check your internet connection.', 10000);
+      return;
     }
-    hideLoadingIndicator();
+    if (error.error === 'auth-missing') {
+      clearState();
+      renderNotification('Login Error: You are logged out due to authentication error.', 5000);
+      renderLoginContainer();
+      hideChatContainer();
+      hideLoadingIndicator();
+      return;
+    }
+    if (error.error === 'user-not-found') {
+      renderNotification('User ' + state.currentChat + ' is not online.', 5000);
+      hideConversation();
+      state.currentChat = null;
+      state.chatHistory = [];
+      hideLoadingIndicator();
+      return;
+    }
+    if (error.error === 'required-text') {
+      renderMessageError(error.error);
+      hideLoadingIndicator();
+      return;
+    }
   });
 }
 

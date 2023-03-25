@@ -13,6 +13,7 @@ const messageInput = document.querySelector('#message-input');
 const toSend = document.querySelector('#to-send');
 const messageError = document.querySelector('#message-error');
 const sendBtn = document.querySelector('#send-btn');
+const newNotification = document.querySelector('#new-notification');
 
 const loader = document.querySelector('#loader');
 
@@ -40,14 +41,9 @@ export function renderLoginError(error) {
     loginError.style.display = 'block';
     loginError.textContent = 'Login error: ' + renderErrorMessage(error);
     setTimeout(() => {
-        hideLoginError();
+        loginError.style.display = 'none';
+        loginError.textContent = '';
     }, 10000);
-}
-
-// Hide the login error message
-export function hideLoginError() {
-    loginError.style.display = 'none';
-    loginError.textContent = '';
 }
 
 // Render the message error message
@@ -55,14 +51,9 @@ export function renderMessageError(error) {
     messageError.style.display = 'block';
     messageError.textContent = 'Message error: ' + renderErrorMessage(error);
     setTimeout(() => {
-        hideMessageError();
+        messageError.style.display = 'none';
+        messageError.textContent = '';
     }, 5000);
-}
-
-// Hide the message error message
-export function hideMessageError() {
-    messageError.style.display = 'none';
-    messageError.textContent = '';
 }
 
 // Render the login form
@@ -183,4 +174,14 @@ export function showLoadingIndicator() {
 
 export function hideLoadingIndicator() {
     loader.style.display = 'none';
+}
+
+export function renderNotification(message, duration) {
+    newNotification.style.display = 'block';
+    newNotification.textContent = message;
+
+    setTimeout(() => {
+        newNotification.style.display = 'none';
+        newNotification.textContent = '';
+    }, duration);
 }

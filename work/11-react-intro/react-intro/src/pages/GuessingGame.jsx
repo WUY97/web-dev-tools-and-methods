@@ -1,7 +1,8 @@
 import React from 'react';
 import compare from '../utils/compare';
+import '../App.css';
 
-export default function GuessingGame({ handleLogout }) {
+export default function GuessingGame({ handleLogout, username }) {
     const [currentGuess, setCurrentGuess] = React.useState('');
     const [guessMessage, setGuessMessage] = React.useState('');
 
@@ -15,34 +16,37 @@ export default function GuessingGame({ handleLogout }) {
         if (word === secretWord) {
             setGuessMessage('You guessed it!');
             setCurrentGuess(word);
-        } else if (!validGuess.test(word)) {
-            setGuessMessage(word + ' is not a valid guess');
-        } else if (word.length <= 5) {
+        } else if (word.length === 0) {
+            setGuessMessage('Please enter a guess.');
+        }else if (word.length < 5) {
             setGuessMessage(word + ' is too short');
+        } else if (!validGuess.test(word)) {
+            setGuessMessage(word + ' is not a valid guess.');
         } else {
             setGuessMessage(
-                word + ' has ' + compare(secretWord, word) + ' correct letters'
+                word + ' has ' + compare(secretWord, word) + ' correct letters.'
             );
             setCurrentGuess(word);
         }
     };
 
     return (
-        <>
-            <button type='submit' id='logout-btn' onClick={handleLogout}>
-                Logout
-            </button>
-            <h2 id='current-guess'>
+        <div className='game-container'>
+            <h2>
+                Hi {username},
                 {currentGuess
-                    ? 'Your current guess is ' + currentGuess.toUpperCase()
-                    : 'No guess yet'}
+                    ? ' your most recent guess is ' + currentGuess.toUpperCase()
+                    : ' start guessing!'}
             </h2>
             <form onSubmit={handleSubmit}>
-                <label for='word'>Your guess</label>
-                <input type='text' id='word' name='word' required />
+                <label for='word'>Your new guess:</label>
+                <input type='text' name='word' placeholder='Your guess here' />
+                {guessMessage ? <p className='message'>{guessMessage}</p> : ''}
                 <button type='submit'>Try</button>
-                {guessMessage ? <p id='guess-message'>{guessMessage}</p> : ''}
             </form>
-        </>
+            <button type='submit' onClick={handleLogout}>
+                Logout
+            </button>
+        </div>
     );
 }

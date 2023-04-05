@@ -35,13 +35,13 @@ button {
 button:hover {
     background-color: #caccfd;
     color: white;
-    cursor: pointer;    
+    cursor: pointer;
 }
 
 form {
-  display: flex;
-  flex-direction: column;
-  row-gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
 }
 
 h1 {

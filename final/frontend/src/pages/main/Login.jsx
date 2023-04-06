@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-function Login({ setLoggedIn, setUsername, setPage }) {
+function Login({ setLoggedIn, setUsername, setPage, showLogin, setShowLogin }) {
     const [errorMessage, setErrorMessage] = useState('');
-    
+
     const validUsername = /^[a-zA-Z0-9]{5,20}$/;
 
     const handleLogin = (event) => {
@@ -22,23 +22,44 @@ function Login({ setLoggedIn, setUsername, setPage }) {
             setLoggedIn(true);
             setUsername(username);
             setPage('Home');
+            setShowLogin(false);
         }
     };
 
+    const handleClose = () => {
+        setShowLogin(false);
+    };
+
     return (
-        <main>
-            <h1>Enter username to log in.</h1>
-            <form onSubmit={handleLogin}>
-                <label for='username'>Username:</label>
-                <input
-                    type='text'
-                    name='username'
-                    placeholder='Enter your username'
-                />
-                {errorMessage && <p className='message'>{errorMessage}</p>}
-                <button type='submit'>Login</button>
-            </form>
-        </main>
+        <>
+            {showLogin && (
+                <div className='modal'>
+                    <div className='modal-content'>
+                        <div className='modal-header'>
+                            <h1>Enter username to log in.</h1>
+                            <button
+                                className='modal-close-button'
+                                onClick={handleClose}
+                            >
+                                <i class='gg-close'></i>
+                            </button>
+                        </div>
+                        <form className='login-form' onSubmit={handleLogin}>
+                            <label for='username'><h3>Username</h3></label>
+                            <input
+                                type='text'
+                                name='username'
+                                placeholder='Enter your username'
+                            />
+                            {errorMessage && (
+                                <p className='error-message'>{errorMessage}</p>
+                            )}
+                            <button type='submit' className='filled-button'>Login</button>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
 

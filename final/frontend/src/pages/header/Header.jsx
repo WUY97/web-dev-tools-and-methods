@@ -1,8 +1,8 @@
 import Menu from '../../shared/components/Menu';
 
-import logo from '../../assets/logo.svg';
+import logo from '../../assets/logo.png';
 
-function Header({ setPage, loggedIn, setLoggedIn, username, setUsername }) {
+function Header({ setPage, loggedIn, setLoggedIn, username, setUsername, setShowLogin }) {
     function go(event, page) {
         event.preventDefault();
         setPage(page);
@@ -29,6 +29,7 @@ function Header({ setPage, loggedIn, setLoggedIn, username, setUsername }) {
                     loggedIn={loggedIn}
                     setLoggedIn={setLoggedIn}
                     setUsername={setUsername}
+                    setShowLogin={setShowLogin}
                 />
             </nav>
         </header>

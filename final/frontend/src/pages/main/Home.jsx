@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import Post from '../../shared/components/Post';
 import posts from '../../assets/posts';

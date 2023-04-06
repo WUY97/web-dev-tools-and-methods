@@ -1,6 +1,13 @@
 import { useState } from 'react';
 
-function Menu({ setPage, loggedIn, setLoggedIn, username, setUsername }) {
+function Menu({
+    setPage,
+    loggedIn,
+    setLoggedIn,
+    username,
+    setUsername,
+    setShowLogin,
+}) {
     function go(event, page) {
         event.preventDefault();
         setPage(page);
@@ -10,6 +17,10 @@ function Menu({ setPage, loggedIn, setLoggedIn, username, setUsername }) {
 
     const handleOpen = () => {
         setOpen(!open);
+    };
+
+    const handleLogin = () => {
+        setShowLogin(true);
     };
 
     const handleLogout = (event) => {
@@ -34,7 +45,10 @@ function Menu({ setPage, loggedIn, setLoggedIn, username, setUsername }) {
                     onClick={(e) => go(e, 'Home')}
                     aria-label='Go Home'
                 >
-                    <div><i class='gg-home'></i></div> Home
+                    <div>
+                        <i class='gg-home'></i>
+                    </div>{' '}
+                    Home
                 </button>
 
                 <button
@@ -42,7 +56,10 @@ function Menu({ setPage, loggedIn, setLoggedIn, username, setUsername }) {
                     onClick={(e) => go(e, 'MyPost')}
                     aria-label='Go to my post page'
                 >
-                    <div><i class='gg-notes'></i></div> My Posts
+                    <div>
+                        <i class='gg-notes'></i>
+                    </div>{' '}
+                    My Posts
                 </button>
 
                 <button
@@ -50,7 +67,10 @@ function Menu({ setPage, loggedIn, setLoggedIn, username, setUsername }) {
                     onClick={(e) => go(e, 'CreatePost')}
                     aria-label='Go to create new post page'
                 >
-                    <div><i class='gg-add-r'></i></div> Create Post
+                    <div>
+                        <i class='gg-add-r'></i>
+                    </div>{' '}
+                    Create Post
                 </button>
                 {loggedIn ? (
                     <>
@@ -59,16 +79,22 @@ function Menu({ setPage, loggedIn, setLoggedIn, username, setUsername }) {
                             onClick={handleLogout}
                             aria-label='Logout'
                         >
-                            <div><i class='gg-log-out'></i></div> Logout
+                            <div>
+                                <i class='gg-log-out'></i>
+                            </div>{' '}
+                            Logout
                         </button>
                     </>
                 ) : (
                     <button
                         className='text-button'
-                        onClick={(e) => go(e, 'Login')}
+                        onClick={handleLogin}
                         aria-label='Go to login page'
                     >
-                        <div><i class='gg-log-in'></i></div> Login
+                        <div>
+                            <i class='gg-log-in'></i>
+                        </div>{' '}
+                        Login
                     </button>
                 )}
             </div>

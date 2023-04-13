@@ -1,8 +1,17 @@
-import Menu from '../../shared/components/Menu';
+import Menu from './Menu';
 
 import logo from '../../assets/logo.png';
 
-function Header({ setPage, loggedIn, setLoggedIn, username, setUsername, setShowLogin }) {
+function Header({
+    setPage,
+    loggedIn,
+    setLoggedIn,
+    username,
+    setUsername,
+    setShowLogin,
+    setShowCreatePost,
+    setIsLoading,
+}) {
     function go(event, page) {
         event.preventDefault();
         setPage(page);
@@ -23,13 +32,15 @@ function Header({ setPage, loggedIn, setLoggedIn, username, setUsername, setShow
                 </div>
             </div>
             <nav className='nav-right'>
-                {username && <div className='username'>{username}</div>}
+                {loggedIn && username && <div className='username'>{username}</div>}
                 <Menu
                     setPage={setPage}
                     loggedIn={loggedIn}
                     setLoggedIn={setLoggedIn}
                     setUsername={setUsername}
                     setShowLogin={setShowLogin}
+                    setShowCreatePost={setShowCreatePost}
+                    setIsLoading={setIsLoading}
                 />
             </nav>
         </header>

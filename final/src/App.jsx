@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import './App.css';
 
@@ -7,12 +7,28 @@ import Home from './pages/main/Home';
 import MyPost from './pages/main/MyPost';
 import CreatePost from './pages/main/CreatePost';
 import Login from './pages/main/Login';
+import LoadingIndicator from './shared/components/LoadingIndicator';
+import { checkLoginStatus } from './shared/utils/services';
 
 function App() {
     const [page, setPage] = useState('Home');
     const [loggedIn, setLoggedIn] = useState(false);
     const [username, setUsername] = useState('');
     const [showLogin, setShowLogin] = useState(false);
+    const [showCreatePost, setShowCreatePost] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        checkLoginStatus()
+            .then((result) => {
+                setUsername(result.username);
+                setLoggedIn(true);
+            })
+            .catch((error) => {
+                setUsername('');
+                setLoggedIn(false);
+            });
+    }, []);
 
     return (
         <div className='app'>
@@ -23,10 +39,19 @@ function App() {
                 setLoggedIn={setLoggedIn}
                 username={username}
                 setUsername={setUsername}
+                setShowCreatePost={setShowCreatePost}
+                setIsLoading={setIsLoading}
             />
             {page === 'Home' && <Home username={username} />}
-            {page === 'MyPost' && <MyPost loggedIn={loggedIn} username={username} />}
-            {page === 'CreatePost' && <CreatePost />}
+            {page === 'MyPost' && (
+                <MyPost loggedIn={loggedIn} username={username} />
+            )}
+            {showCreatePost && (
+                <CreatePost
+                    setShowCreatePost={setShowCreatePost}
+                    username={username}
+                />
+            )}
             {!loggedIn && showLogin && (
                 <Login
                     showLogin={showLogin}
@@ -34,8 +59,10 @@ function App() {
                     setUsername={setUsername}
                     setPage={setPage}
                     setShowLogin={setShowLogin}
+                    setIsLoading={setIsLoading}
                 />
             )}
+            {isLoading && <LoadingIndicator />}
         </div>
     );
 }

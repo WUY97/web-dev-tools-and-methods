@@ -1,5 +1,8 @@
 import { useState } from 'react';
 
+import LogoutButton from './LogoutButton';
+import LoginButton from './LoginButton';
+
 function Menu({
     setPage,
     loggedIn,
@@ -7,6 +10,8 @@ function Menu({
     username,
     setUsername,
     setShowLogin,
+    setShowCreatePost,
+    setIsLoading,
 }) {
     function go(event, page) {
         event.preventDefault();
@@ -19,14 +24,8 @@ function Menu({
         setOpen(!open);
     };
 
-    const handleLogin = () => {
-        setShowLogin(true);
-    };
-
-    const handleLogout = (event) => {
-        event.preventDefault();
-        setLoggedIn(false);
-        setUsername('');
+    const handleCreatePost = () => {
+        setShowCreatePost(true);
     };
 
     return (
@@ -46,7 +45,7 @@ function Menu({
                     aria-label='Go Home'
                 >
                     <div>
-                        <i class='gg-home'></i>
+                        <i className='gg-home'></i>
                     </div>{' '}
                     Home
                 </button>
@@ -57,45 +56,29 @@ function Menu({
                     aria-label='Go to my post page'
                 >
                     <div>
-                        <i class='gg-notes'></i>
+                        <i className='gg-notes'></i>
                     </div>{' '}
                     My Posts
                 </button>
 
                 <button
                     className='text-button'
-                    onClick={(e) => go(e, 'CreatePost')}
+                    onClick={handleCreatePost}
                     aria-label='Go to create new post page'
                 >
                     <div>
-                        <i class='gg-add-r'></i>
+                        <i className='gg-add-r'></i>
                     </div>{' '}
                     Create Post
                 </button>
                 {loggedIn ? (
-                    <>
-                        <button
-                            className='text-button'
-                            onClick={handleLogout}
-                            aria-label='Logout'
-                        >
-                            <div>
-                                <i class='gg-log-out'></i>
-                            </div>{' '}
-                            Logout
-                        </button>
-                    </>
+                    <LogoutButton
+                        setUsername={setUsername}
+                        setLoggedIn={setLoggedIn}
+                        setIsLoading={setIsLoading}
+                    />
                 ) : (
-                    <button
-                        className='text-button'
-                        onClick={handleLogin}
-                        aria-label='Go to login page'
-                    >
-                        <div>
-                            <i class='gg-log-in'></i>
-                        </div>{' '}
-                        Login
-                    </button>
+                    <LoginButton setShowLogin={setShowLogin} />
                 )}
             </div>
         </div>

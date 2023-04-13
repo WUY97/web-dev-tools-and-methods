@@ -68,7 +68,7 @@ function Post({ post, username }) {
                                 className='prev-image-button'
                                 onClick={handlePrevImage}
                             >
-                                <i class='gg-arrow-left-o'></i>
+                                <i className='gg-arrow-left-o'></i>
                             </button>
                         )}
                         <img
@@ -81,7 +81,7 @@ function Post({ post, username }) {
                                     className='next-image-button'
                                     onClick={handleNextImage}
                                 >
-                                    <i class='gg-arrow-right-o'></i>
+                                    <i className='gg-arrow-right-o'></i>
                                 </button>
                             )}
                     </div>

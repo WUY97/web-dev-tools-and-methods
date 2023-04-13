@@ -15,7 +15,6 @@ exports.createUser = async (req, res) => {
     const { username } = req.body;
 
     if (!isValidUsername(username)) {
-        console.log(username);
         res.status(400).json({ error: 'required-username' });
         return;
     }

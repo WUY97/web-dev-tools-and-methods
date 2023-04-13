@@ -9,14 +9,19 @@ module.exports = (app) => {
 
     const router = require('express').Router();
     const auth = require('./helpers/auth.js');
-    const upload= require('./helpers/multer.js');
+    const uploadFile = require('./helpers/multer.js');
 
+    router.get('/api', (req, res) => {
+        res.status(200).send({
+            message: 'Connected!',
+        });
+    });
     router.post('/api/session', createUser);
     router.get('/api/session', getUser);
     router.delete('/api/session', deleteUser);
 
     // router.get('/api/post', getAllPosts);
-    router.post('/api/post',  upload.array('image'), auth, createPost, );
+    router.post('/api/post', uploadFile, auth, createPost);
     // router.get('api/post/:postId', getPost);
     // router.delete('/api/post/:postId', deletePost);
 

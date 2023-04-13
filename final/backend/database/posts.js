@@ -1,10 +1,10 @@
 class Post {
     static lastId = 0;
-    constructor(title, content, imageUrls, tags, creator) {
+    constructor(title, content, images, tags, creator) {
         this.id = ++Post.lastId;
         this.title = title;
         this.content = content;
-        this.imageUrl = imageUrls;
+        this.images = images;
         this.tags = tags;
         this.creator = creator;
         this.createdAt = new Date();
@@ -28,11 +28,11 @@ class Posts {
         this.posts = {};
     }
 
-    createPost(title, content, imageUrls, tags, creator) {
+    createPost(title, content, images, tags, creator) {
         const newPost = new Post(
             title,
             content,
-            imageUrls,
+            images,
             tags,
             creator,
         );

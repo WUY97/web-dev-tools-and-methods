@@ -61,6 +61,15 @@ class UserDB {
     deleteSession(sid) {
         delete this.sessions[sid];
     }
+
+    getSessionId(username) {
+        for (const sid in this.sessions) {
+            if (this.sessions[sid].username === username) {
+                return sid;
+            }
+        }
+        return null;
+    }
 }
 
 module.exports = UserDB;

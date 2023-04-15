@@ -49,28 +49,32 @@ function Menu({
                     </div>{' '}
                     Home
                 </button>
-
-                <button
-                    className='text-button'
-                    onClick={(e) => go(e, 'MyPost')}
-                    aria-label='Go to my post page'
-                >
-                    <div>
-                        <i className='gg-notes'></i>
-                    </div>{' '}
-                    My Posts
-                </button>
-
-                <button
-                    className='text-button'
-                    onClick={handleCreatePost}
-                    aria-label='Go to create new post page'
-                >
-                    <div>
-                        <i className='gg-add-r'></i>
-                    </div>{' '}
-                    Create Post
-                </button>
+                {loggedIn ? (
+                    <>
+                        <button
+                            className='text-button'
+                            onClick={(e) => go(e, 'MyPost')}
+                            aria-label='Go to my post page'
+                        >
+                            <div>
+                                <i className='gg-notes'></i>
+                            </div>{' '}
+                            My Posts
+                        </button>
+                        <button
+                            className='text-button'
+                            onClick={handleCreatePost}
+                            aria-label='Go to create new post page'
+                        >
+                            <div>
+                                <i className='gg-add-r'></i>
+                            </div>{' '}
+                            Create Post
+                        </button>
+                    </>
+                ) : (
+                    ''
+                )}
                 {loggedIn ? (
                     <LogoutButton
                         setUsername={setUsername}

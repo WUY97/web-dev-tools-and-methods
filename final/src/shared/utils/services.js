@@ -68,3 +68,21 @@ export async function fetchCreatePost(formData) {
             return response.json();
         });
 }
+
+export async function fetchAllPosts() {
+    return fetch('/api/post/', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+        .catch((err) => Promise.reject({ error: 'network-error' }))
+        .then((response) => {
+            if (!response.ok) {
+                return response.json().then((err) => Promise.reject(err));
+            }
+
+            return response.json();
+        });
+}

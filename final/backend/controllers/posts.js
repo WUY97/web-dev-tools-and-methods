@@ -31,29 +31,17 @@ exports.createPost = async (req, res) => {
         return;
     }
 
-    if (typeof tags !== 'string' && !Array.isArray(tags)) {
+    if (typeof tags !== 'string') {
         res.status(400).json({ error: 'invalid-tags' });
         return;
     }
 
-    if (typeof tags === 'string' && !isValidTag(tags)) {
+    if (!isValidTag(tags)) {
         res.status(400).json({ error: 'invalid-tags' });
         return;
     }
 
-    if (Array.isArray(tags)) {
-        if (tags.length === 0 || tags.length > 5) {
-            res.status(400).json({ error: 'invalid-tags' });
-            return;
-        }
-
-        for (let tag of tags) {
-            if (typeof tag !== 'string' || !isValidTag(tag)) {
-                res.status(400).json({ error: 'invalid-tags' });
-                return;
-            }
-        }
-    }
+    const cleanedTags = tags.replace(/#\S+\s*/g, (match) => match.replace(/\s+/g, ' '));
 
     if (images.length > 5) {
         res.status(400).json({ error: 'invalid-image' });
@@ -68,14 +56,17 @@ exports.createPost = async (req, res) => {
     }
 
     const fileNames = images.map((image) => image.filename);
-    const newPost = postDB.createPost(title, content, fileNames, tags, creator);
+    const newPost = postDB.createPost(title, content, fileNames, cleanedTags, creator);
 
     res.status(201).json(newPost);
 };
 
-exports.getAllPosts = async (req, res) => {};
+exports.getAllPosts = async (req, res) => {
+    const posts = postDB.getAllPosts();
+    res.status(200).json(posts);
+};
 
-// exports.getPost = async (req, res) => {
+// exports.getUserPosts = async (req, res) => {
 
 // }
 

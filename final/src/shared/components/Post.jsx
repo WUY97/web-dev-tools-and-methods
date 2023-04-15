@@ -31,21 +31,21 @@ function Post({ post, username }) {
         <>
             <div className='post'>
                 <div className='post-header'>
-                    <img
+                    {/* <img
                         className='user-avatar'
                         src={`https://picsum.photos/seed/${post.user}/32`}
-                        alt={post.user}
-                    />
+                        alt={post.creator}
+                    /> */}
                     <div className='post-header-text'>
                         <h3 className='post-user'>
-                            {post.user}{' '}
+                            {post.creator}{' '}
                             <span
                                 className='post-time'
                                 title={new Date(
-                                    post.createTime
+                                    post.createdAt
                                 ).toLocaleString()}
                             >
-                                • {getTimeSincePost(post.createTime)}
+                                • {getTimeSincePost(post.createdAt)}
                             </span>
                         </h3>
                     </div>
@@ -72,7 +72,7 @@ function Post({ post, username }) {
                             </button>
                         )}
                         <img
-                            src={post.images[displayedImageIndex]}
+                            src={`http://localhost:4000/uploads/${post.images[displayedImageIndex]}`}
                             alt={`post-${post.id}-${displayedImageIndex}`}
                         />
                         {post.images.length > 1 &&
@@ -87,9 +87,9 @@ function Post({ post, username }) {
                     </div>
                 </div>
                 <div className='post-tags'>
-                    {post.tags.map((tag, index) => (
+                    {post.tags.split(' ').map((tag, index) => (
                         <span key={index} className='post-tag'>
-                            # {tag}
+                            {tag}
                         </span>
                     ))}
                 </div>

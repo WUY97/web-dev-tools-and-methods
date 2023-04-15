@@ -44,12 +44,13 @@ function App() {
             />
             {page === 'Home' && <Home username={username} />}
             {page === 'MyPost' && (
-                <MyPost loggedIn={loggedIn} username={username} />
+                <MyPost username={username} />
             )}
             {showCreatePost && (
                 <CreatePost
                     setShowCreatePost={setShowCreatePost}
                     username={username}
+                    setPage={setPage}
                 />
             )}
             {!loggedIn && showLogin && (

@@ -5,46 +5,33 @@ import { fetchCreatePost } from '../../shared/utils/services';
 import renderErrorMessage from '../../shared/utils/renderErrorMessage';
 
 function CreatePost({
-    onCreatePost,
-    showCreatePost,
     setShowCreatePost,
-    username,
+    setPage,
 }) {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [tags, setTags] = useState('');
     const [images, setImages] = useState([]);
-    const [user, setUser] = useState('');
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-
-    const handleImageChange = (event) => {
-        const files = Array.from(event.target.files);
-        setImages([...images, ...files]);
-    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const title = event.target.title.value;
-        const content = event.target.content.value;
-        const tags = event.target.tags.value
-            .split(/[\r\n]+/)
-            .map((tag) => tag.trim());
-        const images = event.target.images.files;
-
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
-        for (let i = 0; i < tags.length; i++) {
-            formData.append('tags', tags[i]);
-        }
+        formData.append('tags', tags);
         for (let i = 0; i < images.length; i++) {
             formData.append('image', images[i]);
         }
 
         fetchCreatePost(formData)
             .then((response) => {
+                setTitle('');
+                setContent('');
+                setTags('');
+                setImages([]);
                 setErrorMessage('');
                 setShowSuccessMessage(true);
             })
@@ -59,13 +46,21 @@ function CreatePost({
         setContent('');
         setTags('');
         setImages([]);
-        setUser('');
+        setErrorMessage('');
         setShowSuccessMessage(false);
     };
 
-    const handleCheckOutYourPost = () => {};
+    const handleCheckOutYourPost = () => {
+        setPage('MyPost');
+        setShowSuccessMessage(false);
+        setShowCreatePost(false);
+    };
 
     const handleClose = () => {
+        setTitle('');
+        setContent('');
+        setTags('');
+        setImages([]);
         setShowCreatePost(false);
     };
 
@@ -88,7 +83,9 @@ function CreatePost({
                             type='text'
                             id='title'
                             value={title}
-                            onChange={(event) => setTitle(event.target.value)}
+                            onChange={(e) => {
+                                setTitle(e.target.value);
+                            }}
                             required
                         />
                     </div>
@@ -97,7 +94,9 @@ function CreatePost({
                         <textarea
                             id='content'
                             value={content}
-                            onChange={(event) => setContent(event.target.value)}
+                            onChange={(e) => {
+                                setContent(e.target.value);
+                            }}
                             required
                         ></textarea>
                     </div>
@@ -107,7 +106,9 @@ function CreatePost({
                             type='text'
                             id='tags'
                             value={tags}
-                            onChange={(event) => setTags(event.target.value)}
+                            onChange={(e) => {
+                                setTags(e.target.value);
+                            }}
                         />
                     </div>
                     <div>
@@ -115,7 +116,9 @@ function CreatePost({
                         <input
                             type='file'
                             id='images'
-                            onChange={handleImageChange}
+                            onChange={(e) => {
+                                setImages(Array.from(e.target.files));
+                            }}
                             multiple
                         />
                     </div>

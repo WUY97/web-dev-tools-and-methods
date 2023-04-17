@@ -1,4 +1,4 @@
-const { userDB } = require('../database/db');
+const { userDB } = require('../models/db');
 const { isValidUsername } = require('../helpers/utils');
 
 exports.getUser = async (req, res) => {

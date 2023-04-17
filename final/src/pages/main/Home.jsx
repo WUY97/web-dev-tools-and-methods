@@ -33,9 +33,12 @@ function Home({ username }) {
                 <p>There are no posts yet</p>
             ) : (
                 <>
-                    {(posts.slice(0, displayedPosts)).map((post, index) => (
-                        <Post post={post} key={index} username={username} />
-                    ))}
+                    {posts
+                        .sort((a, b) => b.createdAt - a.createdAt)
+                        .slice(0, displayedPosts)
+                        .map((post, index) => (
+                            <Post post={post} key={index} username={username} />
+                        ))}
                     {endOfPosts ? (
                         <p>End of the World 👽</p>
                     ) : (

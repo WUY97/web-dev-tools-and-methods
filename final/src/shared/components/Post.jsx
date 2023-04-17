@@ -1,9 +1,13 @@
 import { useState } from 'react';
 
+import { fetchCreateComment, fetchDeleteUserPost } from '../utils/services';
 import getTimeSincePost from '../utils/getTimeSincePost';
+import Comment from './Comment';
 
 function Post({ post, username }) {
     const [displayedImageIndex, setDisplayedImageIndex] = useState(0);
+    const [content, setContent] = useState('');
+    const [replyTo, setReplyTo] = useState(post.creator);
 
     const handlePrevImage = () => {
         if (displayedImageIndex > 0) {
@@ -21,21 +25,32 @@ function Post({ post, username }) {
         }
     };
 
-    const handleDelete = () => {
-        console.log('delete post' + post.id);
+    const handleDelete = async () => {
+        fetchDeleteUserPost(post.id)
+            .then()
+            .catch((error) => {
+                console.log(error);
+            });
     };
 
-    const isCurrentUserPost = post.user === username;
+    const isCurrentUserPost = post.creator === username;
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        fetchCreateComment(post.id, '@' + replyTo + ' ' + content)
+            .then((response) => {
+                setContent('');
+                setReplyTo(post.creator);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     return (
         <>
             <div className='post'>
                 <div className='post-header'>
-                    {/* <img
-                        className='user-avatar'
-                        src={`https://picsum.photos/seed/${post.user}/32`}
-                        alt={post.creator}
-                    /> */}
                     <div className='post-header-text'>
                         <h3 className='post-user'>
                             {post.creator}{' '}
@@ -55,7 +70,7 @@ function Post({ post, username }) {
                             onClick={handleDelete}
                             title='Delete Post'
                         >
-                            <i class='gg-close'></i>
+                            <i className='gg-close'></i>
                         </button>
                     )}
                 </div>
@@ -93,22 +108,29 @@ function Post({ post, username }) {
                         </span>
                     ))}
                 </div>
-                {post.comments.length > 0 && (
-                    <div className='post-comments'>
-                        {post.comments.map((comment, index) => (
-                            <div key={index} className='post-comment'>
-                                <img
-                                    className='comment-avatar'
-                                    src={`https://picsum.photos/seed/${comment.userId}/32`}
-                                    alt={comment.userId}
-                                />
-                                <p className='comment-text'>
-                                    {comment.content}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                <div className='post-comment-button'>
+                    <button
+                        className='comment-reply-button'
+                        onClick={() => setContent('@' + post.creator + ' ')}
+                    >
+                        Reply
+                    </button>
+                </div>
+                <Comment
+                    comments={post.comments}
+                    setReplyTo={setReplyTo}
+                    setContent={setContent}
+                />
+
+                <form onSubmit={handleSubmit} className='comment-form'>
+                    <input
+                        type='text'
+                        value={content}
+                        onChange={(event) => setContent(event.target.value)}
+                        placeholder={`Reply to ${replyTo[0]}...`}
+                    />
+                    {content ? <button type='submit'>Comment</button> : ''}
+                </form>
                 <hr className='separator' />
             </div>
         </>

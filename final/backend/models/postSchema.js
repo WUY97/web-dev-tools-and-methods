@@ -29,13 +29,7 @@ class Posts {
     }
 
     createPost(title, content, images, tags, creator) {
-        const newPost = new Post(
-            title,
-            content,
-            images,
-            tags,
-            creator,
-        );
+        const newPost = new Post(title, content, images, tags, creator);
         this.posts[newPost.id] = newPost;
         return newPost;
     }
@@ -50,36 +44,43 @@ class Posts {
         );
     }
 
+    getPostCreator(postId) {
+        const post = this.getPostById(postId);
+        if (!post) {
+            return null;
+        }
+
+        return post.creator;
+    }
+
     getAllPosts() {
         return Object.values(this.posts);
     }
 
-    deletePost(user, postId) {
-        const userPosts = this.getPostsByUsername(user.username);
+    deletePost(username, postId) {
+        const userPosts = this.getPostsByUsername(username);
         if (!userPosts) {
             return false;
         }
 
-        const index = userPosts.findIndex((post) => post.id === postId);
-
-        if (index === -1) {
-            return false;
+        for (let key in this.posts) {
+            if (this.posts[key].id.toString() === postId) {
+                delete this.posts[key];
+                return true;
+            }
         }
 
-        userPosts.splice(index, 1);
-        return true;
+        return false;
     }
 
-    addComment(postId, content, creator, createdAt) {
+    addComment(postId, content, creator) {
         const post = this.getPostById(postId);
         if (!post) {
             return false;
         }
 
-        const comment = new Comment(postId, content, creator, createdAt);
-
+        const comment = new Comment(postId, content, creator);
         post.comments.push(comment);
-
         return comment;
     }
 

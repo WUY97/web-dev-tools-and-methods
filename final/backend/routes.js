@@ -5,7 +5,17 @@ module.exports = (app) => {
         deleteUser,
     } = require('./controllers/users.js');
 
-    const { getAllPosts, createPost } = require('./controllers/posts.js');
+    const {
+        getAllPosts,
+        createPost,
+        getUserPosts,
+        deletePost,
+    } = require('./controllers/posts.js');
+
+    const {
+        createComment,
+        getPostComments,
+    } = require('./controllers/comments.js')
 
     const router = require('express').Router();
     const auth = require('./helpers/auth.js');
@@ -22,12 +32,12 @@ module.exports = (app) => {
 
     router.get('/api/post', getAllPosts);
     router.post('/api/post', uploadFile, auth, createPost);
-    // router.get('api/post/:username', getUserPost);
-    // router.delete('/api/post/:postId', deletePost);
+    router.get('/api/post/:username', getUserPosts);
+    router.delete('/api/post/:postId', deletePost);
 
-    // router.get('/api/post/:id/comments', getAllComments);
-    // router.post('/api/post/:id/comments', createComment);
-    // router.delete('/api/post/:id/comments/:commentId', deleteComment);
+    router.get('/api/post/:postId/comment', getPostComments);
+    router.post('/api/post/:postId/comment', createComment);
+    // router.delete('/api/post/:id/comment/:commentId', deleteComment);
 
     app.use('/', router);
 };

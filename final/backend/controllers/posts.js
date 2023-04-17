@@ -1,4 +1,4 @@
-const { userDB, postDB } = require('../database/db');
+const { userDB, postDB } = require('../models/db');
 const { isValidTag, isValidImage } = require('../helpers/utils');
 
 exports.createPost = async (req, res) => {
@@ -66,10 +66,34 @@ exports.getAllPosts = async (req, res) => {
     res.status(200).json(posts);
 };
 
-// exports.getUserPosts = async (req, res) => {
+exports.getUserPosts = async (req, res) => {
+    const { sid } = req.cookies;
+    const username = userDB.getSessionUser(sid);
+    if (!req.params.username || username !== req.params.username) {
+        return res.status(403).json({ error: 'forbidden' })
+    }
 
-// }
+    const posts = postDB.getPostsByUsername(username);
+    res.status(200).json(posts);
+}
 
-// exports.deletePost = async (req, res) => {
+exports.deletePost = async (req, res) => {
+    const { sid } = req.cookies;
+    const username = userDB.getSessionUser(sid);
+    const postId = req.params.postId;
+    if (!postId) {
+        return res.status(400).json({ error: 'invalid-post' });
+    }
 
-// }
+    if (postDB.getPostCreator(postId) !== username) {
+        return res.status(403).json({ error: 'forbidden' });
+    }
+
+    const result = postDB.deletePost(username, postId);
+
+    if (result) {
+        return res.status(200).json({ success: 'post-deleted' });
+    } else {
+        return res.status(400).json({ error: 'delete-failed' });
+    }
+}

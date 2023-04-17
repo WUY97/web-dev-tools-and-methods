@@ -1,37 +1,43 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-import posts from '../../assets/posts';
+import { fetchUserPosts } from '../../shared/utils/services';
 import Post from '../../shared/components/Post';
 
 function MyPost({ username }) {
+    const [posts, setPosts] = useState([]);
     const [displayedPosts, setDisplayedPosts] = useState(3);
+    const [endOfPosts, setEndOfPosts] = useState(false);
 
     const handleShowMore = () => {
         setDisplayedPosts(displayedPosts + 3);
     };
 
-    const length = posts.filter((post) => post.user === username).length;
+    useEffect(() => {
+        fetchUserPosts(username)
+            .then((response) => {
+                setPosts(Object.values(response));
+            })
+            .catch((error) => {
+                setPosts([]);
+            });
+    }, [posts, username]);
 
-    const endOfPosts = displayedPosts >= length;
+    useEffect(() => {
+        setEndOfPosts(displayedPosts >= posts.length);
+    }, [displayedPosts, posts]);
 
     return (
         <main>
-            {length === 0 ? (
+            {posts.length === 0 ? (
                 <p>There are no posts yet</p>
             ) : (
                 <>
-                    {posts.slice(0, displayedPosts).map((post, index) => {
-                        if (post.user === username) {
-                            return (
-                                <Post
-                                    post={post}
-                                    key={index}
-                                    username={username}
-                                />
-                            );
-                        }
-                        return '';
-                    })}
+                    {posts
+                        .sort((a, b) => b.createdAt - a.createdAt)
+                        .slice(0, displayedPosts)
+                        .map((post, index) => (
+                            <Post post={post} key={index} username={username} />
+                        ))}
                     {endOfPosts ? (
                         <p>End of the World 👽</p>
                     ) : (

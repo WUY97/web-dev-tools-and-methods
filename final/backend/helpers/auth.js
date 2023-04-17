@@ -1,4 +1,4 @@
-const { userDB } = require('../database/db');
+const { userDB } = require('../models/db');
 
 module.exports = (req, res, next) => {
     const sid = req.cookies.sid;

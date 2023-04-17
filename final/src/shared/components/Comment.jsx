@@ -1,0 +1,35 @@
+function Comment({ comments, setReplyTo, setContent }) {
+    return (
+        <>
+            {comments.length !== 0 ? (
+                <div className='comment-container'>
+                    {comments.map((comment) => (
+                        <div className='comment' key={comment.id}>
+                            <div className='comment-content'>
+                                <span className='comment-creator'>
+                                    {comment.creator}:{' '}
+                                </span>
+                                <span className='comment-content'>
+                                    {comment.content}s
+                                </span>
+                                <button
+                                    className='comment-reply-button'
+                                    title={comment.creator}
+                                    onClick={() => {
+                                        setReplyTo(comment.creator);
+                                    }}
+                                >
+                                    Reply
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <p>No Posts Yet.</p>
+            )}
+        </>
+    );
+}
+
+export default Comment;

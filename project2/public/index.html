@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html lang="en-us">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>ChatApp</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+
+    <body>
+        <header>
+            <h1>ChatApp</h1>
+            <div id="login-status">
+                <p id="logged-user"></p><button type="submit" id="logout-btn">Logout</button>
+            </div>
+        </header>
+        <main>
+            <div id="login-container">
+                <h2>Welcome Back!</h2>
+                <p>We are happy that you are with us!</p>
+                <form id="login-form">
+                    <label for="username">Username<input type="text" id="username" name="username" placeholder="Enter your username"></label>
+                    <p id="login-error"></p>
+                    <button id='login-btn' type="submit">Login</button>
+                </form>
+            </div>
+            <div id="chat-container">
+                <div id="user-list"><p id='empty-online-list'>No user online 🙉</p></div>
+                <div id="chat-header"></div>
+                <div id="message-container"><div id="message-list"></div></div>
+                <div id="outgoing-message">
+                    <form id='message-input' name="name" method="post">
+                        <textarea id="to-send" name="text" placeholder="Enter message to send"></textarea>
+                        <p id="message-error"></p>
+                        <button id="send-btn" type="submit">Send</button>
+                    </form>
+                </div>
+            </div>
+            <div id="new-notification"></div>
+        </main>
+        <span id="loader"></span>
+        <script src="index.js"></script>
+    </body>
+
+</html>

@@ -1,4 +1,4 @@
-function getTimeSincePost(postTime) {
+const getTimeSincePost = (postTime) => {
     const timeNow = new Date();
     const diffTime = timeNow - new Date(postTime);
 
@@ -26,4 +26,4 @@ function getTimeSincePost(postTime) {
     }
 }
 
-module.exports = getTimeSincePost;
+export default getTimeSincePost;

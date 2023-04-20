@@ -1,7 +1,7 @@
 import { fetchLogout } from '../../shared/utils/services';
 import renderErrorMessage from '../../shared/utils/renderErrorMessage';
 
-function LogoutButton({ setUsername, setLoggedIn, setIsLoading }) {
+function LogoutButton({ setUsername, setLoggedIn, setIsLoading, setErrorMessage }) {
     const handleLogout = async (event) => {
         event.preventDefault();
         setIsLoading(true);
@@ -11,7 +11,7 @@ function LogoutButton({ setUsername, setLoggedIn, setIsLoading }) {
                 setUsername('');
             })
             .catch((error) => {
-                console.log(renderErrorMessage(error.error));
+                setErrorMessage('Logout error: ' + renderErrorMessage(error.error));
             })
             .finally(() => {
                 setIsLoading(false);

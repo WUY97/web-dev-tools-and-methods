@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
 
-import { fetchUserPosts } from '../../shared/utils/services';
 import Post from '../../shared/components/Post';
+import Pagination from '../../shared/components/Pagination';
+
+import { fetchUserPosts } from '../../shared/utils/services';
+import sortPostsByDate from '../../shared/utils/sortPostsByDate';
 
 function MyPost({ username }) {
     const [posts, setPosts] = useState([]);
-    const [displayedPosts, setDisplayedPosts] = useState(3);
-    const [endOfPosts, setEndOfPosts] = useState(false);
-
-    const handleShowMore = () => {
-        setDisplayedPosts(displayedPosts + 3);
-    };
+    const [currentPage, setCurrentPage] = useState(1);
+    const [postsPerPage] = useState(3);
 
     useEffect(() => {
         fetchUserPosts(username)
@@ -20,34 +19,31 @@ function MyPost({ username }) {
             .catch((error) => {
                 setPosts([]);
             });
-    }, [posts, username]);
+    }, [username]);
 
-    useEffect(() => {
-        setEndOfPosts(displayedPosts >= posts.length);
-    }, [displayedPosts, posts]);
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = posts
+        .sort(sortPostsByDate)
+        .slice(indexOfFirstPost, indexOfLastPost);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     return (
         <main>
             {posts.length === 0 ? (
-                <p>There are no posts yet</p>
+                <p>Write your first post</p>
             ) : (
                 <>
-                    {posts
-                        .sort((a, b) => b.createdAt - a.createdAt)
-                        .slice(0, displayedPosts)
-                        .map((post, index) => (
-                            <Post post={post} key={index} username={username} />
-                        ))}
-                    {endOfPosts ? (
-                        <p>End of the World 👽</p>
-                    ) : (
-                        <button
-                            className='display-more-button'
-                            onClick={handleShowMore}
-                        >
-                            Display More
-                        </button>
-                    )}
+                    {currentPosts.map((post, index) => (
+                        <Post post={post} key={index} username={username} />
+                    ))}
+                    <Pagination
+                        totalPosts={posts.length}
+                        paginate={paginate}
+                        postsPerPage={postsPerPage}
+                        currentPage={currentPage}
+                    />
                 </>
             )}
         </main>

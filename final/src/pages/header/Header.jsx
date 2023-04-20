@@ -11,6 +11,7 @@ function Header({
     setShowLogin,
     setShowCreatePost,
     setIsLoading,
+    setErrorMessage,
 }) {
     function go(event, page) {
         event.preventDefault();
@@ -41,6 +42,7 @@ function Header({
                     setShowLogin={setShowLogin}
                     setShowCreatePost={setShowCreatePost}
                     setIsLoading={setIsLoading}
+                    setErrorMessage={setErrorMessage}
                 />
             </nav>
         </header>

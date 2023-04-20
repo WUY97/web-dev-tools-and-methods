@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import Error from '../../shared/components/Error';
-
 import { fetchLogin } from '../../shared/utils/services';
 import renderErrorMessage from '../../shared/utils/renderErrorMessage';
 
@@ -11,8 +9,8 @@ function Login({
     showLogin,
     setShowLogin,
     setIsLoading,
+    setErrorMessage,
 }) {
-    const [errorMessage, setErrorMessage] = useState('');
 
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -66,9 +64,6 @@ function Login({
                                 name='username'
                                 placeholder='Enter your username'
                             />
-                            {errorMessage && (
-                                <Error errorMessage={errorMessage} />
-                            )}
                             <button type='submit' className='filled-button'>
                                 Login
                             </button>

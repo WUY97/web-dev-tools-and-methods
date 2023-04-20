@@ -7,7 +7,10 @@ import Home from './pages/main/Home';
 import MyPost from './pages/main/MyPost';
 import CreatePost from './pages/main/CreatePost';
 import Login from './pages/main/Login';
+
 import LoadingIndicator from './shared/components/LoadingIndicator';
+import Error from './shared/components/Error';
+
 import { checkLoginStatus } from './shared/utils/services';
 
 function App() {
@@ -17,6 +20,7 @@ function App() {
     const [showLogin, setShowLogin] = useState(false);
     const [showCreatePost, setShowCreatePost] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         checkLoginStatus()
@@ -41,16 +45,22 @@ function App() {
                 setUsername={setUsername}
                 setShowCreatePost={setShowCreatePost}
                 setIsLoading={setIsLoading}
+                setErrorMessage={setErrorMessage}
             />
-            {page === 'Home' && <Home username={username} />}
-            {page === 'MyPost' && (
-                <MyPost username={username} />
+            {page === 'Home' && (
+                <Home
+                    username={username}
+                    setIsLoading={setIsLoading}
+                    loggedIn={loggedIn}
+                />
             )}
+            {page === 'MyPost' && <MyPost username={username} />}
             {showCreatePost && (
                 <CreatePost
                     setShowCreatePost={setShowCreatePost}
                     username={username}
                     setPage={setPage}
+                    setErrorMessage={setErrorMessage}
                 />
             )}
             {!loggedIn && showLogin && (
@@ -61,9 +71,11 @@ function App() {
                     setPage={setPage}
                     setShowLogin={setShowLogin}
                     setIsLoading={setIsLoading}
+                    setErrorMessage={setErrorMessage}
                 />
             )}
             {isLoading && <LoadingIndicator />}
+            {errorMessage && <Error errorMessage={errorMessage} />}
         </div>
     );
 }

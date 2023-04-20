@@ -4,7 +4,7 @@ import { fetchCreateComment, fetchDeleteUserPost } from '../utils/services';
 import getTimeSincePost from '../utils/getTimeSincePost';
 import Comment from './Comment';
 
-function Post({ post, username }) {
+function Post({ post, username, setErrorMessage }) {
     const [displayedImageIndex, setDisplayedImageIndex] = useState(0);
     const [content, setContent] = useState('');
     const [replyTo, setReplyTo] = useState(post.creator);
@@ -29,7 +29,7 @@ function Post({ post, username }) {
         fetchDeleteUserPost(post.id)
             .then()
             .catch((error) => {
-                console.log(error);
+                setErrorMessage('Delete post error: ' + error);
             });
     };
 
@@ -43,7 +43,7 @@ function Post({ post, username }) {
                 setReplyTo(post.creator);
             })
             .catch((error) => {
-                console.log(error);
+                setErrorMessage('Create comment error: ' + error);
             });
     };
 
@@ -121,13 +121,13 @@ function Post({ post, username }) {
                     setReplyTo={setReplyTo}
                     setContent={setContent}
                 />
-
                 <form onSubmit={handleSubmit} className='comment-form'>
                     <input
                         type='text'
                         value={content}
                         onChange={(event) => setContent(event.target.value)}
-                        placeholder={`Reply to ${replyTo[0]}...`}
+                        placeholder={`Reply to ${replyTo}...`}
+                        required
                     />
                     {content ? <button type='submit'>Comment</button> : ''}
                 </form>

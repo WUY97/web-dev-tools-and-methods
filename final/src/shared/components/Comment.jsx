@@ -1,4 +1,4 @@
-function Comment({ comments, setReplyTo, setContent }) {
+function Comment({ comments, setReplyTo }) {
     return (
         <>
             {comments.length !== 0 ? (
@@ -26,7 +26,7 @@ function Comment({ comments, setReplyTo, setContent }) {
                     ))}
                 </div>
             ) : (
-                <p>No Posts Yet.</p>
+                <p>No comments yet.</p>
             )}
         </>
     );

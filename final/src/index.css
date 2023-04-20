@@ -43,6 +43,12 @@ main {
     background-color: #ffffff;
 }
 
+/* errorMessage */
+.error-message {
+    color: var(--light--error);
+    background-color: var(--light--error--container);
+}
+
 /* header */
 footer {
     background-color: var(--light--secondary--container);
@@ -215,7 +221,7 @@ button:hover {
 input {
     height: 2.5rem;
     border-radius: 0.25rem;
-    border-width: 0.1rem;
+    border: none;
 }
 
 input[type='checkbox'] {
@@ -252,4 +258,16 @@ select {
 
 input ::placeholder {
     color: var(--light--on--background);
+}
+
+/* textarea */
+textarea {
+    border-radius: 0.25rem;
+    height: 5rem;
+}
+
+/* notification */
+.new-post-notification {
+    background-color: var(--light--primary--container);
+    color: var(--light--on--primary--container);
 }

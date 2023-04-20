@@ -12,6 +12,7 @@ function Menu({
     setShowLogin,
     setShowCreatePost,
     setIsLoading,
+    setErrorMessage,
 }) {
     function go(event, page) {
         event.preventDefault();
@@ -80,6 +81,7 @@ function Menu({
                         setUsername={setUsername}
                         setLoggedIn={setLoggedIn}
                         setIsLoading={setIsLoading}
+                        setErrorMessage={setErrorMessage}
                     />
                 ) : (
                     <LoginButton setShowLogin={setShowLogin} />

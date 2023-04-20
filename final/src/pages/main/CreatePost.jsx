@@ -133,6 +133,8 @@ function CreatePost() {
                                     onChange={(e) => {
                                         setTitle(e.target.value);
                                     }}
+                                    required
+                                    maxLength={50}
                                 />
                             </div>
                             <div className='create-post-form-item'>
@@ -144,6 +146,8 @@ function CreatePost() {
                                         setContent(e.target.value);
                                     }}
                                     title='Content must be between 1 and 150 characters'
+                                    required
+                                    maxLength={150}
                                 ></textarea>
                             </div>
                             <div className='create-post-form-item'>
@@ -157,6 +161,7 @@ function CreatePost() {
                                     onChange={(e) => {
                                         setTags(e.target.value);
                                     }}
+                                    required
                                 />
                             </div>
                             <div className='create-post-form-item'>
@@ -169,6 +174,8 @@ function CreatePost() {
                                     accept='image/jpeg, image/png'
                                     onChange={handleImageUpload}
                                     multiple
+                                    required
+                                    limits={{ maxFileSize: 5 * 1024 * 1024 }}
                                 />
                             </div>
                             <button className='filled-button' type='submit'>

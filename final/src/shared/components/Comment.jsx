@@ -10,7 +10,7 @@ function Comment({ comments, setReplyTo }) {
                                     {comment.creator}:{' '}
                                 </span>
                                 <span className='comment-content'>
-                                    {comment.content}s
+                                    {comment.content}
                                 </span>
                                 <button
                                     className='comment-reply-button'

@@ -2,7 +2,7 @@ const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
 
-const uploadPath = path.join(__dirname, '../../build', 'uploads');
+const uploadPath = path.join(__dirname, '../public', 'uploads');
 
 if (!fs.existsSync(uploadPath)) {
     fs.mkdirSync(uploadPath, { recursive: true });
@@ -28,7 +28,11 @@ function uploadFile(req, res, next) {
         }
     };
 
-    const upload = multer({ storage, fileFilter }).array('image');
+    const limits = {
+        fileSize: 5 * 1024 * 1024,
+    };
+
+    const upload = multer({ storage, limits, fileFilter }).array('image');
 
     upload(req, res, (err) => {
         if (err) {

@@ -54,6 +54,14 @@ function Post({ post }) {
         dispatch({
             type: 'call_api',
         });
+
+        if (!userDetails) {
+            dispatch({
+                type: 'create_post_without_login',
+            });
+            return;
+        }
+
         fetchCreateComment(post.id, '@' + replyTo + ' ' + content)
             .then((response) => {
                 setContent('');

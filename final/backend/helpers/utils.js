@@ -5,7 +5,7 @@ exports.isValidUsername = (username) => {
 };
 
 exports.isValidTag = (tagString) => {
-    const tags = tagString.split(/\s+/);
+    const tags = tagString.trim().split(/\s+/);
     for (let tag of tags) {
         if (!tag.startsWith('#')) {
             return false;

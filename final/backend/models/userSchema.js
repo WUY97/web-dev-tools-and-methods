@@ -4,6 +4,13 @@ class User {
     constructor(username) {
         this.username = username;
     }
+
+    static isValidUsername(username) {
+        return (
+            typeof username === 'string' &&
+            username.match(/^[A-Za-z0-9]{3,20}$/)
+        );
+    }
 }
 
 class UserDB {

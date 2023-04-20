@@ -1,13 +1,23 @@
 const { postDB, userDB } = require('../models/db');
 
 exports.createComment = async (req, res) => {
-    const { content, replyTo } = req.body;
+    const { content } = req.body;
     const { postId } = req.params;
     const { sid } = req.cookies;
     const creator = userDB.getSessionUser(sid);
 
-    if (!content || !creator || !postId) {
+    if (!content || !postId) {
         res.status(400).json({ error: 'required-fields-missing' });
+        return;
+    }
+
+    if (typeof content !== 'string') {
+        res.status(400).json({ error: 'invalid-content' });
+        return;
+    }
+
+    if (content.trim().length > 100) {
+        res.status(400).json({ error: 'content-too-long' });
         return;
     }
 
@@ -16,7 +26,7 @@ exports.createComment = async (req, res) => {
         return;
     }
 
-    const comment = postDB.addComment(postId, content, creator, replyTo);
+    const comment = postDB.addComment(postId, content.trim(), creator);
 
     if (!comment) {
         return res.status(404).json({ error: 'comment-not-found' });
@@ -34,4 +44,4 @@ exports.getPostComments = async (req, res) => {
     }
 
     res.json(comments);
-}
+};

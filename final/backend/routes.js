@@ -14,7 +14,6 @@ module.exports = (app) => {
 
     const {
         createComment,
-        getPostComments,
     } = require('./controllers/comments.js')
 
     const router = require('express').Router();
@@ -32,12 +31,10 @@ module.exports = (app) => {
 
     router.get('/api/post', getAllPosts);
     router.post('/api/post', uploadFile, auth, createPost);
-    router.get('/api/post/:username', getUserPosts);
-    router.delete('/api/post/:postId', deletePost);
+    router.get('/api/post/:username', auth, getUserPosts);
+    router.delete('/api/post/:postId', auth, deletePost);
 
-    router.get('/api/post/:postId/comment', getPostComments);
-    router.post('/api/post/:postId/comment', createComment);
-    // router.delete('/api/post/:id/comment/:commentId', deleteComment);
+    router.post('/api/post/:postId/comment', auth, createComment);
 
     app.use('/', router);
 };

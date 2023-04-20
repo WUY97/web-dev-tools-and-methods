@@ -41,7 +41,12 @@ exports.createPost = async (req, res) => {
         return;
     }
 
-    const cleanedTags = tags.replace(/#\S+\s*/g, (match) => match.replace(/\s+/g, ' '));
+    const cleanedTags = tags.trim().replace(/#\S+\s*/g, (match) => match.replace(/\s+/g, ' '));
+
+    if (cleanedTags.split(' ').length > 5) {
+        res.status(400).json({ error: 'invalid-tags' });
+        return;
+    }
 
     if (images.length > 5) {
         res.status(400).json({ error: 'invalid-image' });

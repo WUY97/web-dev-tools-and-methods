@@ -26,6 +26,7 @@ export const actionTypes = {
     FROM_CREATE_POST_TO_MY_POST: 'from_create_post_to_my_post',
     CREATE_ANOTHER_POST: 'create_another_post',
     CLOSE_CREATE_POST: 'close_create_post',
+    CREATE_POST_WITHOUT_LOGIN: 'create_post_without_login',
 };
 
 export const reducer = (state, action) => {
@@ -134,6 +135,14 @@ export const reducer = (state, action) => {
                 ...state,
                 showCreatePost: false,
                 showSuccessMessage: false,
+            }
+        }
+        case actionTypes.CREATE_POST_WITHOUT_LOGIN: {
+            return {
+                ...state,
+                loading: false,
+                showLogin: true,
+                error: 'Create Comment Error: Please login to comment.'
             }
         }
         default:

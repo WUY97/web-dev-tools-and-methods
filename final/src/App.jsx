@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
-import './App.css';
+import './styles/App.css';
 
 import Header from './pages/header/Header';
 import Home from './pages/main/Home';
@@ -11,71 +11,36 @@ import Login from './pages/main/Login';
 import LoadingIndicator from './shared/components/LoadingIndicator';
 import Error from './shared/components/Error';
 
-import { checkLoginStatus } from './shared/utils/services';
+import { checkLoginStatus } from './api';
+import { useStore } from './store/Store';
 
 function App() {
-    const [page, setPage] = useState('Home');
-    const [loggedIn, setLoggedIn] = useState(false);
-    const [username, setUsername] = useState('');
-    const [showLogin, setShowLogin] = useState(false);
-    const [showCreatePost, setShowCreatePost] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const { state, dispatch } = useStore();
+    const { userDetails, loading, error, page, showLogin, showCreatePost } =
+        state;
 
     useEffect(() => {
         checkLoginStatus()
             .then((result) => {
-                setUsername(result.username);
-                setLoggedIn(true);
+                dispatch({
+                    type: 'get_user_success',
+                    data: result.username,
+                });
             })
             .catch((error) => {
-                setUsername('');
-                setLoggedIn(false);
+                console.log(error);
             });
-    }, []);
+    }, [dispatch]);
 
     return (
         <div className='app'>
-            <Header
-                setShowLogin={setShowLogin}
-                setPage={setPage}
-                loggedIn={loggedIn}
-                setLoggedIn={setLoggedIn}
-                username={username}
-                setUsername={setUsername}
-                setShowCreatePost={setShowCreatePost}
-                setIsLoading={setIsLoading}
-                setErrorMessage={setErrorMessage}
-            />
-            {page === 'Home' && (
-                <Home
-                    username={username}
-                    setIsLoading={setIsLoading}
-                    loggedIn={loggedIn}
-                />
-            )}
-            {page === 'MyPost' && <MyPost username={username} />}
-            {showCreatePost && (
-                <CreatePost
-                    setShowCreatePost={setShowCreatePost}
-                    username={username}
-                    setPage={setPage}
-                    setErrorMessage={setErrorMessage}
-                />
-            )}
-            {!loggedIn && showLogin && (
-                <Login
-                    showLogin={showLogin}
-                    setLoggedIn={setLoggedIn}
-                    setUsername={setUsername}
-                    setPage={setPage}
-                    setShowLogin={setShowLogin}
-                    setIsLoading={setIsLoading}
-                    setErrorMessage={setErrorMessage}
-                />
-            )}
-            {isLoading && <LoadingIndicator />}
-            {errorMessage && <Error errorMessage={errorMessage} />}
+            <Header />
+            {page === 'Home' && <Home />}
+            {page === 'MyPost' && <MyPost />}
+            {showCreatePost && <CreatePost />}
+            {(!userDetails && showLogin) && <Login />}
+            {loading && <LoadingIndicator />}
+            {error && <Error errorMessage={error} />}
         </div>
     );
 }

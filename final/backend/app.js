@@ -7,6 +7,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
-require('./backend/routes')(app);
+require('./routes')(app);
 
 module.exports = app;

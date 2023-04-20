@@ -1,10 +1,14 @@
 import { useState } from 'react';
 
-import { fetchCreateComment, fetchDeleteUserPost } from '../utils/services';
+import { fetchCreateComment, fetchDeleteUserPost } from '../../api';
 import getTimeSincePost from '../utils/getTimeSincePost';
 import Comment from './Comment';
 
-function Post({ post, username, setErrorMessage }) {
+import { useStore } from '../../store/Store';
+
+function Post({ post }) {
+    const { state, dispatch } = useStore();
+    const { userDetails } = state;
     const [displayedImageIndex, setDisplayedImageIndex] = useState(0);
     const [content, setContent] = useState('');
     const [replyTo, setReplyTo] = useState(post.creator);
@@ -26,24 +30,43 @@ function Post({ post, username, setErrorMessage }) {
     };
 
     const handleDelete = async () => {
+        dispatch({
+            type: 'call_api',
+        });
         fetchDeleteUserPost(post.id)
-            .then()
+            .then(
+                dispatch({
+                    type: 'delete_post_success',
+                })
+            )
             .catch((error) => {
-                setErrorMessage('Delete post error: ' + error);
+                dispatch({
+                    type: 'error',
+                    data: 'Delete post error: ' + error.error,
+                });
             });
     };
 
-    const isCurrentUserPost = post.creator === username;
+    const isCurrentUserPost = post.creator === userDetails;
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        dispatch({
+            type: 'call_api',
+        });
         fetchCreateComment(post.id, '@' + replyTo + ' ' + content)
             .then((response) => {
                 setContent('');
                 setReplyTo(post.creator);
+                dispatch({
+                    type: 'create_comment_success',
+                });
             })
             .catch((error) => {
-                setErrorMessage('Create comment error: ' + error);
+                dispatch({
+                    type: 'error',
+                    data: 'Create comment error: ' + error.error,
+                });
             });
     };
 

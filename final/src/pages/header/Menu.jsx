@@ -3,38 +3,20 @@ import { useState } from 'react';
 import LogoutButton from './LogoutButton';
 import LoginButton from './LoginButton';
 
-function Menu({
-    setPage,
-    loggedIn,
-    setLoggedIn,
-    username,
-    setUsername,
-    setShowLogin,
-    setShowCreatePost,
-    setIsLoading,
-    setErrorMessage,
-}) {
-    function go(event, page) {
-        event.preventDefault();
-        setPage(page);
-    }
+import { useStore } from '../../store/Store';
+
+function Menu() {
+    const { state, dispatch } = useStore();
+    const { userDetails } = state;
 
     const [open, setOpen] = useState(false);
-
-    const handleOpen = () => {
-        setOpen(!open);
-    };
-
-    const handleCreatePost = () => {
-        setShowCreatePost(true);
-    };
 
     return (
         <div className='dropdown'>
             <button
                 id='dropbtn'
                 className='text-button menu-button'
-                onClick={handleOpen}
+                onClick={(e) => setOpen(!open)}
                 aria-label='Open Menu'
             >
                 <i className='gg-menu'></i>
@@ -42,7 +24,12 @@ function Menu({
             <div className={`dropdown-content ${open ? 'show' : ''}`}>
                 <button
                     className='text-button'
-                    onClick={(e) => go(e, 'Home')}
+                    onClick={(e) =>
+                        dispatch({
+                            type: 'set_page',
+                            data: 'Home',
+                        })
+                    }
                     aria-label='Go Home'
                 >
                     <div>
@@ -50,11 +37,16 @@ function Menu({
                     </div>{' '}
                     Home
                 </button>
-                {loggedIn ? (
+                {userDetails ? (
                     <>
                         <button
                             className='text-button'
-                            onClick={(e) => go(e, 'MyPost')}
+                            onClick={(e) =>
+                                dispatch({
+                                    type: 'set_page',
+                                    data: 'MyPost',
+                                })
+                            }
                             aria-label='Go to my post page'
                         >
                             <div>
@@ -64,7 +56,12 @@ function Menu({
                         </button>
                         <button
                             className='text-button'
-                            onClick={handleCreatePost}
+                            onClick={() =>
+                                dispatch({
+                                    type: 'set_show_create_post',
+                                    data: true,
+                                })
+                            }
                             aria-label='Go to create new post page'
                         >
                             <div>
@@ -76,16 +73,7 @@ function Menu({
                 ) : (
                     ''
                 )}
-                {loggedIn ? (
-                    <LogoutButton
-                        setUsername={setUsername}
-                        setLoggedIn={setLoggedIn}
-                        setIsLoading={setIsLoading}
-                        setErrorMessage={setErrorMessage}
-                    />
-                ) : (
-                    <LoginButton setShowLogin={setShowLogin} />
-                )}
+                {userDetails ? <LogoutButton /> : <LoginButton />}
             </div>
         </div>
     );

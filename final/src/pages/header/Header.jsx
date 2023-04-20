@@ -2,27 +2,24 @@ import Menu from './Menu';
 
 import logo from '../../assets/logo.png';
 
-function Header({
-    setPage,
-    loggedIn,
-    setLoggedIn,
-    username,
-    setUsername,
-    setShowLogin,
-    setShowCreatePost,
-    setIsLoading,
-    setErrorMessage,
-}) {
-    function go(event, page) {
-        event.preventDefault();
-        setPage(page);
-    }
+import { useStore } from '../../store/Store';
+
+function Header() {
+    const { state, dispatch } = useStore();
+    const { userDetails } = state;
 
     return (
         <header className='nav-bar'>
             <div className='nav-left'>
                 <div className='header'>
-                    <button onClick={(e) => go(e, 'Home')}>
+                    <button
+                        onClick={() =>
+                            dispatch({
+                                type: 'set_page',
+                                data: 'Home',
+                            })
+                        }
+                    >
                         <img
                             className='header-logo'
                             src={logo}
@@ -33,17 +30,8 @@ function Header({
                 </div>
             </div>
             <nav className='nav-right'>
-                {loggedIn && username && <div className='username'>{username}</div>}
-                <Menu
-                    setPage={setPage}
-                    loggedIn={loggedIn}
-                    setLoggedIn={setLoggedIn}
-                    setUsername={setUsername}
-                    setShowLogin={setShowLogin}
-                    setShowCreatePost={setShowCreatePost}
-                    setIsLoading={setIsLoading}
-                    setErrorMessage={setErrorMessage}
-                />
+                {userDetails && <div className='username'>{userDetails}</div>}
+                <Menu />
             </nav>
         </header>
     );

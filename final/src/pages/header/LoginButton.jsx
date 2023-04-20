@@ -1,19 +1,22 @@
-import React from 'react';
+import { useStore } from '../../store/Store';
 
-function LoginButton({ setShowLogin }) {
-    const handleLogin = () => {
-        setShowLogin(true);
-    };
+function LoginButton() {
+    const { dispatch } = useStore();
 
     return (
         <button
             className='text-button'
-            onClick={handleLogin}
+            onClick={() =>
+                dispatch({
+                    type: 'set_show_login',
+                    data: true,
+                })
+            }
             aria-label='Go to login page'
         >
             <div>
                 <i className='gg-log-in'></i>
-            </div>{' '}
+            </div>
             Login
         </button>
     );

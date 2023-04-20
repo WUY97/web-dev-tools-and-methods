@@ -1,20 +1,25 @@
-import { fetchLogout } from '../../shared/utils/services';
+import { fetchLogout } from '../../api';
 import renderErrorMessage from '../../shared/utils/renderErrorMessage';
+import { useStore } from '../../store/Store';
 
-function LogoutButton({ setUsername, setLoggedIn, setIsLoading, setErrorMessage }) {
+function LogoutButton() {
+    const { dispatch } = useStore();
     const handleLogout = async (event) => {
         event.preventDefault();
-        setIsLoading(true);
+        dispatch({
+            type: 'call_api',
+        });
         fetchLogout()
             .then((result) => {
-                setLoggedIn(false);
-                setUsername('');
+                dispatch({
+                    type: 'logout_success',
+                });
             })
             .catch((error) => {
-                setErrorMessage('Logout error: ' + renderErrorMessage(error.error));
-            })
-            .finally(() => {
-                setIsLoading(false);
+                dispatch({
+                    type: 'error',
+                    data: 'Logout error: ' + renderErrorMessage(error.error),
+                });
             });
     };
 

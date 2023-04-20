@@ -3,10 +3,10 @@ import { useState, useEffect, useRef } from 'react';
 import Post from '../../shared/components/Post';
 
 import useInterval from '../../shared/utils/useInterval';
-import { fetchAllPosts } from '../../shared/utils/services';
+import { fetchAllPosts } from '../../api';
 import sortPostsByDate from '../../shared/utils/sortPostsByDate';
 
-function Home({ username, loggedIn, setErrorMessage }) {
+function Home() {
     const [posts, setPosts] = useState([]);
     const [displayedPosts, setDisplayedPosts] = useState(5);
     const [endOfPosts, setEndOfPosts] = useState(false);
@@ -21,6 +21,7 @@ function Home({ username, loggedIn, setErrorMessage }) {
     const handleRefresh = () => {
         setPosts(newPostsRef.current);
         setNewPost(false);
+        window.scrollTo(0, 0);
     };
 
     useInterval(() => {
@@ -45,7 +46,6 @@ function Home({ username, loggedIn, setErrorMessage }) {
                 .then((response) => {
                     setPosts(Object.values(response));
                     setFirstLoad(false);
-                    
                 })
                 .catch((error) => {
                     setNewPost(false);
@@ -63,7 +63,7 @@ function Home({ username, loggedIn, setErrorMessage }) {
         <main>
             {newPost && (
                 <div className='new-post-notification'>
-                    A new component is available.{' '}
+                    New posts available!
                     <button className='text-button' onClick={handleRefresh}>
                         Refresh
                     </button>
@@ -74,7 +74,7 @@ function Home({ username, loggedIn, setErrorMessage }) {
                     .sort(sortPostsByDate)
                     .slice(0, displayedPosts)
                     .map((post, index) => (
-                        <Post post={post} key={index} username={username} setErrorMessage={setErrorMessage} />
+                        <Post post={post} key={index} />
                     ))}
                 {endOfPosts ? (
                     <p>End of the World 👽</p>

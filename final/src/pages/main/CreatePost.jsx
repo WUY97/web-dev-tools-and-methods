@@ -1,18 +1,23 @@
 import { useState } from 'react';
 
-import { fetchCreatePost } from '../../shared/utils/services';
+import { fetchCreatePost } from '../../api';
 import renderErrorMessage from '../../shared/utils/renderErrorMessage';
 
-function CreatePost({ setShowCreatePost, setPage, setErrorMessage }) {
+import { useStore } from '../../store/Store';
+
+function CreatePost() {
+    const { state, dispatch } = useStore();
+    const { showSuccessMessage } = state;
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [tags, setTags] = useState('');
     const [images, setImages] = useState([]);
-    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+        dispatch({
+            type: 'call_api',
+        });
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
@@ -20,19 +25,22 @@ function CreatePost({ setShowCreatePost, setPage, setErrorMessage }) {
         for (let i = 0; i < images.length; i++) {
             formData.append('image', images[i]);
         }
-
         fetchCreatePost(formData)
             .then((response) => {
                 setTitle('');
                 setContent('');
                 setTags('');
                 setImages([]);
-                setErrorMessage('');
-                setShowSuccessMessage(true);
+                dispatch({
+                    type: 'create_post_success',
+                });
             })
             .catch((error) => {
-                setErrorMessage('Create post error: ' + renderErrorMessage(error.error));
-                setShowSuccessMessage(false);
+                dispatch({
+                    type: 'create_post_fail',
+                    data:
+                        'Create post error: ' + renderErrorMessage(error.error),
+                });
             });
     };
 
@@ -40,15 +48,15 @@ function CreatePost({ setShowCreatePost, setPage, setErrorMessage }) {
         setTitle('');
         setContent('');
         setTags('');
-        setImages([]);
-        setErrorMessage('');
-        setShowSuccessMessage(false);
+        dispatch({
+            type: 'create_another_post',
+        });
     };
 
     const handleCheckOutYourPost = () => {
-        setPage('MyPost');
-        setShowSuccessMessage(false);
-        setShowCreatePost(false);
+        dispatch({
+            type: 'from_create_post_to_my_post',
+        });
     };
 
     const handleClose = () => {
@@ -56,10 +64,13 @@ function CreatePost({ setShowCreatePost, setPage, setErrorMessage }) {
         setContent('');
         setTags('');
         setImages([]);
-        setShowCreatePost(false);
+        dispatch({
+            type: 'close_create_post',
+        });
     };
 
     const handleImageUpload = (event) => {
+        event.preventDefault();
         const files = Array.from(event.target.files);
         if (files.length > 5) {
             alert('You can only upload up to 5 images');
@@ -122,8 +133,6 @@ function CreatePost({ setShowCreatePost, setPage, setErrorMessage }) {
                                     onChange={(e) => {
                                         setTitle(e.target.value);
                                     }}
-                                    maxLength={50}
-                                    required
                                 />
                             </div>
                             <div className='create-post-form-item'>
@@ -135,8 +144,6 @@ function CreatePost({ setShowCreatePost, setPage, setErrorMessage }) {
                                         setContent(e.target.value);
                                     }}
                                     title='Content must be between 1 and 150 characters'
-                                    required
-                                    maxLength={150}
                                 ></textarea>
                             </div>
                             <div className='create-post-form-item'>
@@ -162,7 +169,6 @@ function CreatePost({ setShowCreatePost, setPage, setErrorMessage }) {
                                     accept='image/jpeg, image/png'
                                     onChange={handleImageUpload}
                                     multiple
-                                    required
                                 />
                             </div>
                             <button className='filled-button' type='submit'>

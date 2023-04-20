@@ -3,23 +3,27 @@ import { useState, useEffect } from 'react';
 import Post from '../../shared/components/Post';
 import Pagination from '../../shared/components/Pagination';
 
-import { fetchUserPosts } from '../../shared/utils/services';
+import { fetchUserPosts } from '../../api';
 import sortPostsByDate from '../../shared/utils/sortPostsByDate';
 
-function MyPost({ username }) {
+import { useStore } from '../../store/Store';
+
+function MyPost() {
+    const { state } = useStore();
+    const { userDetails } = state;
     const [posts, setPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage] = useState(3);
 
     useEffect(() => {
-        fetchUserPosts(username)
+        fetchUserPosts(userDetails)
             .then((response) => {
                 setPosts(Object.values(response));
             })
             .catch((error) => {
                 setPosts([]);
             });
-    }, [username]);
+    }, [userDetails]);
 
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -32,11 +36,11 @@ function MyPost({ username }) {
     return (
         <main>
             {posts.length === 0 ? (
-                <p>Write your first post</p>
+                <p className='welcome-message'>Write your first post👾</p>
             ) : (
                 <>
                     {currentPosts.map((post, index) => (
-                        <Post post={post} key={index} username={username} />
+                        <Post post={post} key={index} />
                     ))}
                     <Pagination
                         totalPosts={posts.length}

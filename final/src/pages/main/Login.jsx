@@ -1,44 +1,38 @@
-import { useState } from 'react';
-
-import { fetchLogin } from '../../shared/utils/services';
+import { fetchLogin } from '../../api';
 import renderErrorMessage from '../../shared/utils/renderErrorMessage';
+import { useStore } from '../../store/Store';
 
-function Login({
-    setLoggedIn,
-    setUsername,
-    showLogin,
-    setShowLogin,
-    setIsLoading,
-    setErrorMessage,
-}) {
-
+function Login() {
+    const { state, dispatch } = useStore();
+    const { showLogin } = state;
     const handleLogin = async (event) => {
         event.preventDefault();
-        setIsLoading(true);
+
         const username = event.target.username.value;
 
+        dispatch({
+            type: 'call_api',
+        });
         fetchLogin(username)
             .then((result) => {
-                setUsername(result.username);
-                setLoggedIn(true);
-                setErrorMessage('');
-                setShowLogin(false);
+                dispatch({
+                    type: 'login_success',
+                    data: result.username,
+                });
             })
             .catch((error) => {
-                setUsername('');
-                setLoggedIn(false);
-                setShowLogin(true);
-                setErrorMessage(
-                    'Login error: ' + renderErrorMessage(error.error)
-                );
-            })
-            .finally(() => {
-                setIsLoading(false);
+                dispatch({
+                    type: 'login_fail',
+                    data: 'Login error: ' + renderErrorMessage(error.error),
+                });
             });
     };
 
     const handleClose = () => {
-        setShowLogin(false);
+        dispatch({
+            type: 'set_show_login',
+            data: false,
+        })
     };
 
     return (

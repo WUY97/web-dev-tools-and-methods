@@ -1,0 +1,273 @@
+html * {
+    margin: 0;
+}
+
+:root {
+    --light--primary: #5e6300;
+    --light--on--primary: #ffffff;
+    --light--primary--container: #e2eb4c;
+    --light--on--primary--container: #1b1d00;
+    --light--secondary: #5f613b;
+    --light--on--secondary: #ffffff;
+    --light--secondary--container: #e4e6b6;
+    --light--on--secondary--container: #1b1d02;
+    --light--tertiary: #2a6957;
+    --light--on--tertiary: #ffffff;
+    --light--tertiary--container: #80f0d9;
+    --light--on--tertiary--container: #002018;
+    --light--error: #8a1a1a;
+    --light--on-error: #ffffff;
+    --light--error--container: #ffdad6;
+    --light--on-error--container: #410002;
+    --light--background: #ffffd4;
+    --light--on--background: #1c1c17;
+    --light--surface: #ffffd4;
+    --light--on--surface: #1c1c17;
+    --light--surface--variant: #e5e3d2;
+    --light--on--surface--variant: #47473b;
+    --light--outline: #787869;
+    --light--outline--variant: #cac4d0;
+}
+
+/* header */
+header {
+    background-color: var(--light--secondary--container);
+}
+
+.dropdown-content {
+    background-color: var(--light--secondary--container);
+}
+
+/* main */
+main {
+    background-color: #ffffff;
+}
+
+/* errorMessage */
+.error-message {
+    color: var(--light--error);
+    background-color: var(--light--error--container);
+}
+
+/* header */
+footer {
+    background-color: var(--light--secondary--container);
+}
+
+footer a {
+    color: var(--light--on--secondary--container) !important;
+}
+/* h1 h2 h3 p a */
+body,
+a,
+button,
+label,
+input,
+select,
+textarea,
+ul,
+li {
+    font-family: 'Roboto', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+}
+
+h1 {
+    color: var(--light--on--secondary--container);
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 p,
+label,
+a,
+ul,
+li {
+    color: var(--light--on--background);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    a {
+        transition: 0.1s;
+    }
+}
+
+/* buttons */
+
+button:hover {
+    cursor: pointer;
+}
+
+/* filled buttons */
+.filled-button {
+    border: 0;
+}
+
+.filled-button:enabled {
+    background-color: var(--light--primary);
+    color: var(--light--on--primary);
+}
+
+.filled-button:hover {
+    background-color: var(--light--on--surface--variant);
+    color: var(--light--on--primary);
+}
+
+.filled-button:focus-within {
+    background-color: var(--light--primary);
+    color: var(--light--on--primary);
+}
+
+.filled-button:disabled {
+    background-color: var(--light--surface);
+    color: var(--light--on--surface);
+}
+
+/* outlined buttons */
+.outlined-button:enabled {
+    background-color: var(--light--background);
+    color: var(--light--primary);
+    border-color: var(--light--outline);
+}
+
+.outlined-button:hover {
+    background-color: var(--light--on--primary);
+    color: var(--light--primary);
+    border-color: var(--light--outline);
+}
+
+.outlined-button:focus-within {
+    background-color: var(--light--on--primary);
+    color: var(--light--primary);
+    border-color: var(--light--outline);
+}
+
+.outlined-button:disabled {
+    background-color: var(--light--background);
+    color: var(--light--on--surface);
+    border-color: var(--light--surface);
+}
+
+/* text buttons */
+.text-button {
+    border: 0;
+}
+
+.text-button:enabled {
+    background-color: var(--light--secondary--container);
+    color: var(--light--primary);
+}
+
+.text-button:hover {
+    background-color: var(--light--surface--variant);
+    color: var(--light--primary);
+}
+
+.text-button:focus-within {
+    background-color: var(--light--surface--variant);
+    color: var(--light--primary);
+}
+
+.text-button:disabled {
+    background-color: var(--light--secondary--container);
+    color: var(--light--on--surface);
+}
+
+/* Cards */
+.card {
+    background-color: var(--light--primary--container);
+}
+
+/* Modals */
+.modal {
+    background-color: rgba(28, 28, 23, 0.5);
+}
+
+.modal-content {
+    background-color: var(--light--secondary--container);
+}
+
+/* Panels */
+.panel {
+    background-color: var(--light--secondary--container);
+}
+
+/* Forms */
+.form-container {
+    background-color: var(--light--secondary--container);
+}
+
+.error-message,
+.required-message {
+    color: var(--light--error);
+}
+
+.tertiary-container {
+    background-color: var(--light--tertiary--container);
+    color: var(--light--on--tertiary--container);
+}
+
+/* Input & Select */
+input {
+    height: 2.5rem;
+    border-radius: 0.25rem;
+    border: none;
+}
+
+input[type='checkbox'] {
+    margin: 1rem;
+}
+
+@media (pointer: coarse) {
+    input[type='checkbox'] {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    input {
+        height: 3rem;
+    }
+
+    select {
+        height: 3rem;
+    }
+}
+
+select {
+    height: 2.5rem;
+    border-radius: 0.25rem;
+    border-width: 0.1rem;
+}
+
+input,
+select {
+    background-color: #ffffff;
+    border-color: var(--light--outline);
+    color: var(--light--on--background);
+}
+
+input ::placeholder {
+    color: var(--light--on--background);
+}
+
+/* textarea */
+textarea {
+    border-radius: 0.25rem;
+    height: 5rem;
+}
+
+/* notification */
+.new-post-notification {
+    background-color: var(--light--primary--container);
+    color: var(--light--on--primary--container);
+}
